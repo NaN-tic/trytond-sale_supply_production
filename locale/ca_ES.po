@@ -1,0 +1,27 @@
+# 
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:production,cost_plan:"
+msgid "Cost Plan"
+msgstr "Pla de costos"
+
+msgctxt "field:sale.line,cost_plan:"
+msgid "Cost Plan"
+msgstr "Pla de costos"
+
+msgctxt "field:sale.line,productions:"
+msgid "Productions"
+msgstr "Produccions"
+
+msgctxt "field:sale.sale,productions:"
+msgid "Productions"
+msgstr "Produccions"
+
+msgctxt "model:ir.action,name:act_production_form"
+msgid "Productions"
+msgstr "Produccions"
+
+msgctxt "view:sale.sale:"
+msgid "Productions"
+msgstr "Produccions"
