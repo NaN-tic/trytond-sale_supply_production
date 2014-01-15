@@ -48,8 +48,14 @@ class SaleLine:
             ('state', '=', 'computed')],
         depends=['type', 'product'], states={
             'invisible': Eval('type') != 'line',
-            })
+            }, on_change=['cost_plan'])
     productions = fields.One2Many('production', 'origin', 'Productions')
+
+    def on_change_cost_plan(self):
+        if self.cost_plan:
+            if hasattr(self.cost_plan, 'unit_price'):
+                return {'unit_price': self.cost_plan.unit_price}
+        return {}
 
     @classmethod
     def copy(cls, lines, default=None):
