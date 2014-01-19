@@ -1,12 +1,27 @@
 #The COPYRIGHT file at the top level of this repository contains the full
 #copyright notices and license terms.
 from trytond.model import fields
-from trytond.pool import PoolMeta
+from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
-__all__ = ['Sale', 'SaleLine']
+__all__ = ['Product', 'Sale', 'SaleLine']
 __metaclass__ = PoolMeta
+
+
+class Product:
+    __name__ = 'product.product'
+
+    @classmethod
+    def get_sale_price(cls, products, quantity=0):
+        CostPlan = Pool().get('product.cost.plan')
+        res = super(Product, cls).get_sale_price(products, quantity)
+        cost_plan = Transaction().context.get('cost_plan')
+        if cost_plan:
+            unit_price = CostPlan(cost_plan).unit_price
+            for x in res.keys():
+                res[x] = unit_price
+        return res
 
 
 class Sale:
@@ -54,11 +69,25 @@ class SaleLine:
             }, on_change=['cost_plan'])
     productions = fields.One2Many('production', 'origin', 'Productions')
 
+    @classmethod
+    def __setup__(cls):
+        super(SaleLine, cls).__setup__()
+        if 'cost_plan' not in cls.amount.on_change_with:
+            cls.amount.on_change_with.append('cost_plan')
+        if 'cost_plan' not in cls.quantity.on_change:
+            cls.quantity.on_change.append('cost_plan')
+        for field in cls.quantity.on_change:
+            if field not in cls.cost_plan.on_change:
+                cls.cost_plan.on_change.append(field)
+
     def on_change_cost_plan(self):
-        if self.cost_plan:
-            if hasattr(self.cost_plan, 'unit_price'):
-                return {'unit_price': self.cost_plan.unit_price}
-        return {}
+        return self.on_change_quantity()
+
+    def _get_context_sale_price(self):
+        context = super(SaleLine, self)._get_context_sale_price()
+        if hasattr(self, 'cost_plan'):
+            context['cost_plan'] = self.cost_plan.id if self.cost_plan else None
+        return context
 
     @classmethod
     def copy(cls, lines, default=None):
