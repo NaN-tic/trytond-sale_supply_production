@@ -267,7 +267,7 @@ Create a cost plan for product (without child boms)::
     >>> plan.product = product
     >>> len(plan.boms) == 1
     True
-    >>> plan.quantity = 10
+    >>> plan.boms[0].bom = None
     >>> plan.save()
     >>> plan.state
     u'draft'
@@ -275,8 +275,6 @@ Create a cost plan for product (without child boms)::
     >>> plan.reload()
     >>> plan.state
     u'computed'
-    >>> len(plan.products) == 2
-    True
 
 Create a cost plan for product (with child boms)::
 
@@ -285,7 +283,6 @@ Create a cost plan for product (with child boms)::
     >>> child_plan.product = product
     >>> len(child_plan.boms) == 1
     True
-    >>> child_plan.quantity = 10
     >>> child_plan.save()
     >>> child_plan.state
     u'draft'
@@ -298,8 +295,6 @@ Create a cost plan for product (with child boms)::
     >>> child_plan.state
     u'computed'
     >>> len(child_plan.products) == 3
-    True
-    >>> child_plan.total_cost == Decimal('175.0')
     True
 
 Sale product with first plan::

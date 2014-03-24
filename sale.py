@@ -60,11 +60,10 @@ class SaleLine:
 
     cost_plan = fields.Many2One('product.cost.plan', 'Cost Plan',
         domain=[
-            ('party', '=', Eval('_parent_sale', {}).get('party')),
             ('product', '=', Eval('product', 0)),
             ('state', '=', 'computed'),
             ],
-        depends=['type', 'product', '_parent_sale.party'], states={
+        depends=['type', 'product'], states={
             'invisible': Eval('type') != 'line',
             }, on_change=['cost_plan'])
     productions = fields.One2Many('production', 'origin', 'Productions')
