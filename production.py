@@ -12,9 +12,8 @@ __metaclass__ = PoolMeta
 class Production:
     __name__ = 'production'
 
-    cost_plan = fields.Many2One('product.cost.plan', 'Cost Plan',
-        domain=[('state', '=', 'computed')], states={
-                'readonly': ~Eval('state').in_(['request', 'draft']),
+    cost_plan = fields.Many2One('product.cost.plan', 'Cost Plan', states={
+            'readonly': ~Eval('state').in_(['request', 'draft']),
             }, depends=['state'])
 
     @classmethod
