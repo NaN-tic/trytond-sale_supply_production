@@ -61,7 +61,6 @@ class SaleLine:
     cost_plan = fields.Many2One('product.cost.plan', 'Cost Plan',
         domain=[
             ('product', '=', Eval('product', 0)),
-            ('state', '=', 'computed'),
             ],
         depends=['type', 'product'], states={
             'invisible': Eval('type') != 'line',
@@ -75,9 +74,24 @@ class SaleLine:
             cls.amount.on_change_with.append('cost_plan')
         if 'cost_plan' not in cls.quantity.on_change:
             cls.quantity.on_change.append('cost_plan')
+        if 'cost_plan' not in cls.product.on_change:
+            cls.product.on_change.append('cost_plan')
         for field in cls.quantity.on_change:
             if field not in cls.cost_plan.on_change:
                 cls.cost_plan.on_change.append(field)
+
+    def on_change_product(self):
+        CostPlan = Pool().get('product.cost.plan')
+        plan = None
+        if self.product:
+            plans = CostPlan.search([('product', '=', self.product.id)],
+                order=[('number', 'DESC')], limit=1)
+            if plans:
+                plan = plans[0]
+                self.cost_plan = plan
+        res = super(SaleLine, self).on_change_product()
+        res['cost_plan'] = plan.id if plan else None
+        return res
 
     def on_change_cost_plan(self):
         return self.on_change_quantity()
