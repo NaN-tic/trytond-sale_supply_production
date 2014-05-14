@@ -265,37 +265,10 @@ Create a cost plan for product (without child boms)::
     >>> CostPlan = Model.get('product.cost.plan')
     >>> plan = CostPlan()
     >>> plan.product = product
-    >>> len(plan.boms) == 1
-    True
-    >>> plan.boms[0].bom = None
+    >>> plan.quantity = 1
     >>> plan.save()
-    >>> plan.state
-    u'draft'
     >>> CostPlan.compute([plan.id], config.context)
     >>> plan.reload()
-    >>> plan.state
-    u'computed'
-
-Create a cost plan for product (with child boms)::
-
-    >>> CostPlan = Model.get('product.cost.plan')
-    >>> child_plan = CostPlan()
-    >>> child_plan.product = product
-    >>> len(child_plan.boms) == 1
-    True
-    >>> child_plan.save()
-    >>> child_plan.state
-    u'draft'
-    >>> for product_bom in child_plan.boms:
-    ...     product_bom.bom = product_bom.product.boms[0]
-    ...     product_bom.save()
-    >>> child_plan.reload()
-    >>> CostPlan.compute([child_plan.id], config.context)
-    >>> child_plan.reload()
-    >>> child_plan.state
-    u'computed'
-    >>> len(child_plan.products) == 3
-    True
 
 Sale product with first plan::
 
@@ -325,42 +298,4 @@ Sale product with first plan::
     True
     >>> production.quantity == 2.0
     True
-
-Sale product with second plan::
-
-    >>> Sale = Model.get('sale.sale')
-    >>> SaleLine = Model.get('sale.line')
-    >>> sale = Sale()
-    >>> sale.party = customer
-    >>> sale.payment_term = payment_term
-    >>> sale.invoice_method = 'order'
-    >>> sale_line = SaleLine()
-    >>> sale.lines.append(sale_line)
-    >>> sale_line.product = product
-    >>> sale_line.cost_plan = child_plan
-    >>> sale_line.quantity = 2.0
-    >>> sale.save()
-    >>> Sale.quote([sale.id], config.context)
-    >>> Sale.confirm([sale.id], config.context)
-    >>> Sale.process([sale.id], config.context)
-    >>> sale.state
-    u'processing'
-    >>> sale.reload()
-    >>> len(sale.productions) == 2
-    True
-    >>> main_production, = sale.productions.find([
-    ...     ('product', '=', product.id),
-    ...     ], limit=1)
-    >>> main_production.quantity == 2.0
-    True
-    >>> len(main_production.inputs) == 2
-    True
-    >>> child_production, = sale.productions.find([
-    ...     ('product', '=', component1.id),
-    ...     ], limit=1)
-    >>> len(child_production.inputs) == 2
-    True
-    >>> child_production.quantity == 10.0
-    True
-
 
