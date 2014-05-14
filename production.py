@@ -27,13 +27,26 @@ class Production:
 class Plan:
     __name__ = 'product.cost.plan'
 
+    @classmethod
+    def __setup__(cls):
+        super(Plan, cls).__setup__()
+        cls._error_messages.update({
+                'cannot_create_productions_missing_bom': ('No production can '
+                    'be created because Product Cost Plan "%s" has no BOM '
+                    'assigned.')
+                })
     def get_productions(self, warehouse, unit, quantity):
-        " Returns a list of productions to create for the cost plan "
+        "Returns a list of productions to create for the cost plan"
+        if not self.bom:
+            self.raise_user_error('cannot_create_productions_missing_bom',
+                self.rec_name)
         productions = []
 
         prod_data = self.get_elegible_productions(unit, quantity)
         for data in prod_data:
             data['warehouse'] = warehouse
+            if hasattr(self, 'route'):
+                data['route'] = self.route
             productions.append(self._get_production(data))
 
         return productions
@@ -55,7 +68,7 @@ class Plan:
         return res
 
     def _get_chained_productions(self, product, bom, quantity, unit):
-        " Returns chained productions to produce product"
+        "Returns chained productions to produce product"
         pool = Pool()
         Input = pool.get('production.bom.input')
         plan_boms = {}
@@ -83,7 +96,7 @@ class Plan:
         return {'product': self.product, 'bom': self.bom}
 
     def _get_production(self, values):
-        " Returns the production values to create for the especified bom "
+        "Returns the production values to create for the especified bom"
         pool = Pool()
         Company = pool.get('company.company')
         Production = pool.get('production')
@@ -105,6 +118,9 @@ class Plan:
         warehouse = values['warehouse']
         production.warehouse = warehouse
         production.location = warehouse.production_location
+
+        if 'route' in values:
+            production.route = values['route']
 
         if 'bom' in values:
             production.bom = values['bom']
