@@ -47,6 +47,8 @@ class Plan:
             data['warehouse'] = warehouse
             if hasattr(self, 'route'):
                 data['route'] = self.route
+            if hasattr(self, 'process'):
+                data['process'] = self.route
             productions.append(self._get_production(data))
 
         return productions
@@ -121,6 +123,8 @@ class Plan:
 
         if 'route' in values:
             production.route = values['route']
+        if 'process' in values:
+            production.process = values['process']
 
         if 'bom' in values:
             production.bom = values['bom']
