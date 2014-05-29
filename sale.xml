@@ -15,7 +15,7 @@
         <record model="ir.action.act_window" id="act_production_form">
             <field name="name">Productions</field>
             <field name="res_model">production</field>
-            <field name="domain">[("id", "in", Eval('productions'))]</field>
+            <field name="domain">[("origin.sale.id", "in", Eval('active_ids'), 'sale.line')]</field>
         </record>
         <record model="ir.action.keyword"
                 id="act_open_production_keyword1">
