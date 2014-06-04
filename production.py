@@ -12,9 +12,11 @@ __metaclass__ = PoolMeta
 class Production:
     __name__ = 'production'
 
-    cost_plan = fields.Many2One('product.cost.plan', 'Cost Plan', states={
+    cost_plan = fields.Many2One('product.cost.plan', 'Cost Plan',
+        states={
             'readonly': ~Eval('state').in_(['request', 'draft']),
-            }, depends=['state'])
+            },
+        depends=['state'])
 
     @classmethod
     def _get_origin(cls):
@@ -35,6 +37,7 @@ class Plan:
                     'be created because Product Cost Plan "%s" has no BOM '
                     'assigned.')
                 })
+
     def get_productions(self, warehouse, unit, quantity):
         "Returns a list of productions to create for the cost plan"
         if not self.bom:
@@ -131,9 +134,9 @@ class Plan:
             production.inputs = []
             production.outputs = []
             changes = production.explode_bom()
-            for input_vals in changes['inputs']['add']:
+            for index, input_vals in changes['inputs']['add']:
                 production.inputs.append(Move(**input_vals))
-            for output_vals in changes['outputs']['add']:
+            for index, output_vals in changes['outputs']['add']:
                 production.outputs.append(Move(**output_vals))
         return production
 

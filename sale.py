@@ -62,24 +62,20 @@ class SaleLine:
         domain=[
             ('product', '=', Eval('product', 0)),
             ],
-        depends=['type', 'product'], states={
+        states={
             'invisible': Eval('type') != 'line',
-            }, on_change=['cost_plan'])
+            },
+        depends=['type', 'product'])
     productions = fields.One2Many('production', 'origin', 'Productions')
 
     @classmethod
     def __setup__(cls):
         super(SaleLine, cls).__setup__()
-        if 'cost_plan' not in cls.amount.on_change_with:
-            cls.amount.on_change_with.append('cost_plan')
-        if 'cost_plan' not in cls.quantity.on_change:
-            cls.quantity.on_change.append('cost_plan')
-        if 'cost_plan' not in cls.product.on_change:
-            cls.product.on_change.append('cost_plan')
         for field in cls.quantity.on_change:
             if field not in cls.cost_plan.on_change:
-                cls.cost_plan.on_change.append(field)
+                cls.cost_plan.on_change.add(field)
 
+    @fields.depends('cost_plan', 'product')
     def on_change_product(self):
         CostPlan = Pool().get('product.cost.plan')
         plan = None
@@ -99,7 +95,8 @@ class SaleLine:
     def _get_context_sale_price(self):
         context = super(SaleLine, self)._get_context_sale_price()
         if hasattr(self, 'cost_plan'):
-            context['cost_plan'] = self.cost_plan.id if self.cost_plan else None
+            context['cost_plan'] = (self.cost_plan.id
+                if self.cost_plan else None)
         return context
 
     @classmethod
