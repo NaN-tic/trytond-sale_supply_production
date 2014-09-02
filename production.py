@@ -46,12 +46,14 @@ class Plan:
         productions = []
 
         prod_data = self.get_elegible_productions(unit, quantity)
+        # The first production in prod_data is the "main" production
+        if hasattr(self, 'route'):
+            prod_data[0]['route'] = self.route
+        if hasattr(self, 'process'):
+            prod_data[0]['process'] = self.process
+
         for data in prod_data:
             data['warehouse'] = warehouse
-            if hasattr(self, 'route'):
-                data['route'] = self.route
-            if hasattr(self, 'process'):
-                data['process'] = self.route
             productions.append(self._get_production(data))
 
         return productions
@@ -104,8 +106,9 @@ class Plan:
         "Returns the production values to create for the especified bom"
         pool = Pool()
         Company = pool.get('company.company')
-        Production = pool.get('production')
         Move = pool.get('stock.move')
+        Operation = pool.get('production.operation')
+        Production = pool.get('production')
 
         context = Transaction().context
 
@@ -124,10 +127,15 @@ class Plan:
         production.warehouse = warehouse
         production.location = warehouse.production_location
 
-        if 'route' in values:
-            production.route = values['route']
         if 'process' in values:
             production.process = values['process']
+
+        if 'route' in values:
+            production.route = values['route']
+            production.operations = []
+            changes = production.update_operations()
+            for index, operation_vals in changes['operations']['add']:
+                production.operations.append(Operation(**operation_vals))
 
         if 'bom' in values:
             production.bom = values['bom']
@@ -147,4 +155,7 @@ class PlanBOM:
     def get_production_data(self):
         if not self.bom:
             return
-        return {'product': self.product, 'bom': self.bom}
+        return {
+            'product': self.product,
+            'bom': self.bom,
+            }

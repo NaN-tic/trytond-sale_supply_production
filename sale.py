@@ -46,6 +46,10 @@ class Sale:
                 production.cost_plan = line.cost_plan
                 production.origin = str(line)
                 production.reference = self.reference
+                if (hasattr(production.product, 'quality_template') and
+                        production.product.quality_template):
+                    production.quality_template = (
+                        production.product.quality_template)
                 production.save()
 
     def get_productions(self, name):
@@ -99,14 +103,6 @@ class SaleLine:
                 if self.cost_plan else None)
         return context
 
-    @classmethod
-    def copy(cls, lines, default=None):
-        if default is None:
-            default = {}
-        default = default.copy()
-        default['productions'] = None
-        return super(SaleLine, cls).copy(lines, default=default)
-
     def get_productions(self):
         if not self.cost_plan:
             return []
@@ -114,3 +110,11 @@ class SaleLine:
             return []
         return self.cost_plan.get_productions(self.sale.warehouse, self.unit,
             self.quantity)
+
+    @classmethod
+    def copy(cls, lines, default=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['productions'] = None
+        return super(SaleLine, cls).copy(lines, default=default)
