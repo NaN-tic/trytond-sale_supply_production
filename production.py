@@ -107,8 +107,12 @@ class Plan:
         pool = Pool()
         Company = pool.get('company.company')
         Move = pool.get('stock.move')
-        Operation = pool.get('production.operation')
         Production = pool.get('production')
+        Operation = None
+        try:
+            Operation = pool.get('production.operation')
+        except KeyError:
+            pass
 
         context = Transaction().context
 
@@ -132,10 +136,11 @@ class Plan:
 
         if 'route' in values:
             production.route = values['route']
-            production.operations = []
-            changes = production.update_operations()
-            for index, operation_vals in changes['operations']['add']:
-                production.operations.append(Operation(**operation_vals))
+            if Operation:
+                production.operations = []
+                changes = production.update_operations()
+                for index, operation_vals in changes['operations']['add']:
+                    production.operations.append(Operation(**operation_vals))
 
         if 'bom' in values:
             production.bom = values['bom']
