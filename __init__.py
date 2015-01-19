@@ -8,7 +8,6 @@ from .sale import *
 
 def register():
     Pool.register(
-        Product,
         Production,
         Plan,
         PlanBOM,

@@ -2,6 +2,14 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "error:product.cost.plan:"
+msgid ""
+"No production can be created because Product Cost Plan \"%s\" has no BOM "
+"assigned."
+msgstr ""
+"No es pot crear cap producció perquè el pla de cost \"%s\" no té una LdM "
+"associada."
+
 msgctxt "field:production,cost_plan:"
 msgid "Cost Plan"
 msgstr "Pla de costos"

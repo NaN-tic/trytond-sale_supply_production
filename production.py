@@ -100,7 +100,10 @@ class Plan:
         return res
 
     def get_production_data(self):
-        return {'product': self.product, 'bom': self.bom}
+        return {
+            'product': self.product,
+            'bom': self.bom,
+            }
 
     def _get_production(self, values):
         "Returns the production values to create for the especified bom"
@@ -118,7 +121,7 @@ class Plan:
 
         production = Production()
         production.company = Company(context.get('company'))
-        production.state = 'request'
+        production.state = 'draft'
         production.quantity = values['quantity']
         production.product = values['product']
 

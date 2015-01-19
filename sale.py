@@ -5,23 +5,8 @@ from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
-__all__ = ['Product', 'Sale', 'SaleLine']
+__all__ = ['Sale', 'SaleLine']
 __metaclass__ = PoolMeta
-
-
-class Product:
-    __name__ = 'product.product'
-
-    @classmethod
-    def get_sale_price(cls, products, quantity=0):
-        CostPlan = Pool().get('product.cost.plan')
-        res = super(Product, cls).get_sale_price(products, quantity)
-        cost_plan = Transaction().context.get('cost_plan')
-        if cost_plan:
-            unit_price = CostPlan(cost_plan).unit_price
-            for x in res.keys():
-                res[x] = unit_price
-        return res
 
 
 class Sale:
@@ -72,13 +57,6 @@ class SaleLine:
         depends=['type', 'product'])
     productions = fields.One2Many('production', 'origin', 'Productions')
 
-    @classmethod
-    def __setup__(cls):
-        super(SaleLine, cls).__setup__()
-        for field in cls.quantity.on_change:
-            if field not in cls.cost_plan.on_change:
-                cls.cost_plan.on_change.add(field)
-
     @fields.depends('cost_plan', 'product')
     def on_change_product(self):
         CostPlan = Pool().get('product.cost.plan')
@@ -92,16 +70,6 @@ class SaleLine:
         res = super(SaleLine, self).on_change_product()
         res['cost_plan'] = plan.id if plan else None
         return res
-
-    def on_change_cost_plan(self):
-        return self.on_change_quantity()
-
-    def _get_context_sale_price(self):
-        context = super(SaleLine, self)._get_context_sale_price()
-        if hasattr(self, 'cost_plan'):
-            context['cost_plan'] = (self.cost_plan.id
-                if self.cost_plan else None)
-        return context
 
     def get_productions(self):
         if not self.cost_plan:
