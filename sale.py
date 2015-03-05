@@ -1,5 +1,5 @@
-#The COPYRIGHT file at the top level of this repository contains the full
-#copyright notices and license terms.
+# The COPYRIGHT file at the top level of this repository contains the full
+# copyright notices and license terms.
 from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
@@ -11,9 +11,31 @@ __metaclass__ = PoolMeta
 
 class Sale:
     __name__ = 'sale.sale'
-
     productions = fields.Function(fields.One2Many('production', None,
         'Productions'), 'get_productions')
+
+    @classmethod
+    def __setup__(cls):
+        super(Sale, cls).__setup__()
+        cls._error_messages.update({
+                'missing_cost_plan': (
+                    'The line "%(line)s" of sale "%(sale)s" doesn\'t have '
+                    'Cost Plan, so it won\'t generate any production.'),
+                })
+
+    @classmethod
+    def confirm(cls, sales):
+        for sale in sales:
+            for line in sale.lines:
+                if (line.type == 'line' and line.product
+                        and not getattr(line.product, 'purchasable', False)
+                        and not line.cost_plan):
+                    cls.raise_user_warning('missing_cost_plan%s' % sale.id,
+                        'missing_cost_plan', {
+                            'sale': sale.rec_name,
+                            'line': line.rec_name,
+                            })
+        super(Sale, cls).confirm(sales)
 
     @classmethod
     def process(cls, sales):
