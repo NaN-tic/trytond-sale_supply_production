@@ -50,6 +50,7 @@ class Sale:
         for line in self.lines:
             productions = line.get_productions()
             for production in productions:
+                # TODO: move this code to sale line get_produtions() method
                 production.cost_plan = line.cost_plan
                 production.origin = str(line)
                 production.reference = self.reference
@@ -98,6 +99,8 @@ class SaleLine:
             return []
         if len(self.productions) > 0:
             return []
+        # TODO: It will be better, to improve modularity, to call a sale.line
+        # method
         return self.cost_plan.get_productions(self.sale.warehouse, self.unit,
             self.quantity)
 
