@@ -5,7 +5,7 @@ from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
-__all__ = ['Sale', 'SaleLine']
+__all__ = ['Sale', 'SaleLine', 'ChangeLineQuantityStart', 'ChangeLineQuantity']
 __metaclass__ = PoolMeta
 
 
@@ -111,3 +111,77 @@ class SaleLine:
         default = default.copy()
         default['productions'] = None
         return super(SaleLine, cls).copy(lines, default=default)
+
+
+class ChangeLineQuantityStart:
+    __name__ = 'sale.change_line_quantity.start'
+
+    def on_change_with_minimal_quantity(self):
+        pool = Pool()
+        Uom = pool.get('product.uom')
+
+        minimal_quantity = super(ChangeLineQuantityStart,
+            self).on_change_with_minimal_quantity()
+
+        produced_quantity = 0
+        for production in (self.line.productions if self.line else []):
+            if production.state in ('assigned', 'running', 'done', 'cancel'):
+                produced_quantity += Uom.compute_qty(production.uom,
+                    production.quantity, self.line.unit)
+
+        return max(minimal_quantity, produced_quantity)
+
+
+class ChangeLineQuantity:
+    __name__ = 'sale.change_line_quantity'
+
+    @classmethod
+    def __setup__(cls):
+        super(ChangeLineQuantity, cls).__setup__()
+        cls._error_messages.update({
+                'quantity_already_produced': 'Quantity already produced!',
+                'no_updateable_production': ('There is no updateable '
+                    'production available!'),
+                })
+
+    def transition_modify(self):
+        line = self.start.line
+        if (line.quantity != self.start.new_quantity
+                and line.sale.state == 'processing'):
+            self.update_production()
+        return super(ChangeLineQuantity, self).transition_modify()
+
+    def update_production(self):
+        pool = Pool()
+        Production = pool.get('production')
+        Uom = pool.get('product.uom')
+
+        line = self.start.line
+        quantity = self.start.new_quantity
+
+        for production in line.productions:
+            if production.state in ('assigned', 'running', 'done', 'cancel'):
+                quantity -= Uom.compute_qty(production.uom,
+                    production.quantity, self.start.line.unit)
+        if quantity < 0:
+            self.raise_user_error('quantity_already_produced')
+
+        updateable_productions = self.get_updateable_productions()
+        if quantity >= line.unit.rounding:
+            production = updateable_productions.pop(0)
+            production.quantity = Uom.compute_qty(line.unit, quantity,
+                production.uom)
+            production.save()
+        if updateable_productions:
+            Production.delete(updateable_productions)
+
+    def get_updateable_productions(self):
+        productions = sorted(
+            [p for p in self.start.line.productions if p.state == 'draft'],
+            key=self._production_key)
+        if not productions:
+            self.raise_user_error('no_updateable_productions')
+        return productions
+
+    def _production_key(self, production):
+        return -production.quantity

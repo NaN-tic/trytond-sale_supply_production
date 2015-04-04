@@ -10,6 +10,14 @@ msgstr ""
 "No es pot crear cap producció perquè el pla de cost \"%s\" no té una LdM "
 "associada."
 
+msgctxt "error:sale.change_line_quantity:"
+msgid "Quantity already produced!"
+msgstr "Ja s'ha produit aquesta quantitat!"
+
+msgctxt "error:sale.change_line_quantity:"
+msgid "There is no updateable production available!"
+msgstr "No hi ha producions modificables!"
+
 msgctxt "error:sale.sale:"
 msgid ""
 "The line \"%(line)s\" of sale \"%(sale)s\" doesn't have Cost Plan, so it "

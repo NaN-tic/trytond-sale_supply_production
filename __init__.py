@@ -13,4 +13,8 @@ def register():
         PlanBOM,
         SaleLine,
         Sale,
+        ChangeLineQuantityStart,
         module='sale_cost_plan', type_='model')
+    Pool.register(
+        ChangeLineQuantity,
+        module='sale_cost_plan', type_='wizard')
