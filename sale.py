@@ -4,6 +4,7 @@ from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
+from .tools import prepare_vals
 
 __all__ = ['Sale', 'SaleLine', 'ChangeLineQuantityStart', 'ChangeLineQuantity']
 __metaclass__ = PoolMeta
@@ -124,7 +125,8 @@ class ChangeLineQuantityStart:
             self).on_change_with_minimal_quantity()
 
         produced_quantity = 0
-        for production in (self.line.productions if self.line else []):
+        productions = self.line.productions if self.line else []
+        for production in productions:
             if production.state in ('assigned', 'running', 'done', 'cancel'):
                 produced_quantity += Uom.compute_qty(production.uom,
                     production.quantity, self.line.unit)
@@ -140,7 +142,7 @@ class ChangeLineQuantity:
         super(ChangeLineQuantity, cls).__setup__()
         cls._error_messages.update({
                 'quantity_already_produced': 'Quantity already produced!',
-                'no_updateable_production': ('There is no updateable '
+                'no_updateable_productions': ('There is no updateable '
                     'production available!'),
                 })
 
@@ -169,15 +171,47 @@ class ChangeLineQuantity:
         updateable_productions = self.get_updateable_productions()
         if quantity >= line.unit.rounding:
             production = updateable_productions.pop(0)
-            production.quantity = Uom.compute_qty(line.unit, quantity,
-                production.uom)
+            self._change_production_quantity(
+                production,
+                Uom.compute_qty(line.unit, quantity, production.uom))
             production.save()
         if updateable_productions:
             Production.delete(updateable_productions)
 
+    def _change_production_quantity(self, production, quantity):
+        pool = Pool()
+        Move = pool.get('stock.move')
+        Operation = None
+        try:
+            Operation = pool.get('production.operation')
+        except KeyError:
+            pass
+
+        production.quantity = quantity
+        if getattr(production, 'route'):
+            changes = production.update_operations()
+            if changes and changes.get('operations'):
+                if changes['operations'].get('remove'):
+                    Operation.delete(
+                        [Operation(o) for o in changes['operations']['remove']])
+                production.operations = []
+                for _, operation_vals in changes['operations']['add']:
+                    operation_vals = prepare_vals(operation_vals)
+                    production.operations.append(Operation(**operation_vals))
+        if production.bom:
+            production.inputs = []
+            production.outputs = []
+            changes = production.explode_bom()
+            for _, input_vals in changes['inputs']['add']:
+                production.inputs.append(Move(**input_vals))
+            for _, output_vals in changes['outputs']['add']:
+                production.outputs.append(Move(**output_vals))
+        production.save()
+
     def get_updateable_productions(self):
         productions = sorted(
-            [p for p in self.start.line.productions if p.state == 'draft'],
+            [p for p in self.start.line.productions
+                if p.state in ('draft', 'waiting')],
             key=self._production_key)
         if not productions:
             self.raise_user_error('no_updateable_productions')
