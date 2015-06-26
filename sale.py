@@ -4,9 +4,11 @@ from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
+
 from .tools import prepare_vals
 
-__all__ = ['Sale', 'SaleLine', 'ChangeLineQuantityStart', 'ChangeLineQuantity']
+__all__ = ['Sale', 'SaleLine', 'Plan',
+    'ChangeLineQuantityStart', 'ChangeLineQuantity']
 __metaclass__ = PoolMeta
 
 
@@ -48,18 +50,10 @@ class Sale:
         super(Sale, cls).process(sales)
 
     def create_productions(self):
+        productions = []
         for line in self.lines:
-            productions = line.get_productions()
-            for production in productions:
-                # TODO: move this code to sale line get_produtions() method
-                production.cost_plan = line.cost_plan
-                production.origin = str(line)
-                production.reference = self.reference
-                if (hasattr(production.product, 'quality_template') and
-                        production.product.quality_template):
-                    production.quality_template = (
-                        production.product.quality_template)
-                production.save()
+            productions += line.create_productions()
+        return productions
 
     def get_productions(self, name):
         productions = []
@@ -95,15 +89,76 @@ class SaleLine:
         res['cost_plan'] = plan.id if plan else None
         return res
 
-    def get_productions(self):
-        if not self.cost_plan:
+    def create_productions(self):
+        pool = Pool()
+        Move = pool.get('stock.move')
+        try:
+            Operation = pool.get('production.operation')
+        except KeyError:
+            Operation = None
+
+        if self.type != 'line' or self.quantity <= 0 or not self.cost_plan:
             return []
         if len(self.productions) > 0:
             return []
-        # TODO: It will be better, to improve modularity, to call a sale.line
-        # method
-        return self.cost_plan.get_productions(self.sale.warehouse, self.unit,
-            self.quantity)
+
+        productions = []
+        for production_values in self.cost_plan.get_elegible_productions(
+                self.unit, self.quantity):
+            production = self.get_production(production_values)
+
+            if production:
+                if production.bom:
+                    production.inputs = []
+                    production.outputs = []
+                    changes = production.explode_bom()
+                    for _, input_vals in changes['inputs']['add']:
+                        production.inputs.append(Move(**input_vals))
+                    for _, output_vals in changes['outputs']['add']:
+                        production.outputs.append(Move(**output_vals))
+
+                if getattr(production, 'route', None) and Operation:
+                    production.operations = []
+                    changes = production.update_operations()
+                    for _, operation_vals in changes['operations']['add']:
+                        operation_vals = prepare_vals(operation_vals)
+                        production.operations.append(
+                            Operation(**operation_vals))
+
+                production.save()
+                productions.append(production)
+        return productions
+
+    def get_production(self, values):
+        pool = Pool()
+        Production = pool.get('production')
+
+        production = Production()
+        production.company = self.sale.company
+        production.warehouse = self.warehouse
+        production.location = self.warehouse.production_location
+        production.cost_plan = self.cost_plan
+        production.origin = str(self)
+        production.reference = self.sale.reference
+        production.state = 'draft'
+        production.product = values['product']
+        production.quantity = values['quantity']
+        production.uom = values.get('uom', production.product.default_uom)
+        if hasattr(Production, 'stock_owner'):
+            production.stock_owner = self.sale.party
+        if (hasattr(Production, 'quality_template') and
+                production.product.quality_template):
+            production.quality_template = production.product.quality_template
+
+        if 'process' in values:
+            production.process = values['process']
+
+        if 'route' in values:
+            production.route = values['route']
+
+        if 'bom' in values:
+            production.bom = values['bom']
+        return production
 
     @classmethod
     def copy(cls, lines, default=None):
@@ -112,6 +167,77 @@ class SaleLine:
         default = default.copy()
         default['productions'] = None
         return super(SaleLine, cls).copy(lines, default=default)
+
+
+class Plan:
+    __name__ = 'product.cost.plan'
+
+    @classmethod
+    def __setup__(cls):
+        super(Plan, cls).__setup__()
+        cls._error_messages.update({
+                'cannot_create_productions_missing_bom': ('No production can '
+                    'be created because Product Cost Plan "%s" has no BOM '
+                    'assigned.')
+                })
+
+    def get_elegible_productions(self, unit, quantity):
+        """
+        Returns a list of dicts with the required data to create all the
+        productions required for this plan
+        """
+        if not self.bom:
+            self.raise_user_error('cannot_create_productions_missing_bom',
+                self.rec_name)
+
+        prod = {
+            'product': self.product,
+            'bom': self.bom,
+            'uom': unit,
+            'quantity': quantity,
+            }
+        if hasattr(self, 'route'):
+            prod['route'] = self.route
+        if hasattr(self, 'process'):
+            prod['process'] = self.process
+
+        res = [
+            prod
+            ]
+        res.extend(self._get_chained_productions(self.product, self.bom,
+                quantity, unit))
+        return res
+
+    def _get_chained_productions(self, product, bom, quantity, unit,
+            plan_boms=None):
+        "Returns base values for chained productions"
+        pool = Pool()
+        Input = pool.get('production.bom.input')
+
+        if plan_boms is None:
+            plan_boms = {}
+            for plan_bom in self.boms:
+                if plan_bom.bom:
+                    plan_boms[plan_bom.product.id] = plan_bom
+
+        factor = bom.compute_factor(product, quantity, unit)
+        res = []
+        for input_ in bom.inputs:
+            input_product = input_.product
+            if input_product.id in plan_boms:
+                # Create production for current product
+                plan_bom = plan_boms[input_product.id]
+                prod = {
+                    'product': plan_bom.product,
+                    'bom': plan_bom.bom,
+                    'uom': input_.uom,
+                    'quantity': Input.compute_quantity(input_, factor),
+                    }
+                res.append(prod)
+                # Search for more chained productions
+                res.extend(self._get_chained_productions(input_product,
+                        plan_bom.bom, quantity, input_.uom, plan_boms))
+        return res
 
 
 class ChangeLineQuantityStart:
@@ -188,12 +314,13 @@ class ChangeLineQuantity:
             pass
 
         production.quantity = quantity
-        if getattr(production, 'route'):
+        if getattr(production, 'route', None):
             changes = production.update_operations()
             if changes and changes.get('operations'):
                 if changes['operations'].get('remove'):
-                    Operation.delete(
-                        [Operation(o) for o in changes['operations']['remove']])
+                    Operation.delete([
+                            Operation(o)
+                            for o in changes['operations']['remove']])
                 production.operations = []
                 for _, operation_vals in changes['operations']['add']:
                     operation_vals = prepare_vals(operation_vals)

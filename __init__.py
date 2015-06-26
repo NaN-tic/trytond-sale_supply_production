@@ -10,7 +10,6 @@ def register():
     Pool.register(
         Production,
         Plan,
-        PlanBOM,
         ChangeQuantityStart,
         SaleLine,
         Sale,
