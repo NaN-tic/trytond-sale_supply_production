@@ -85,9 +85,9 @@ class SaleLine:
             if plans:
                 plan = plans[0]
                 self.cost_plan = plan
-        res = super(SaleLine, self).on_change_product()
-        res['cost_plan'] = plan.id if plan else None
-        return res
+        super(SaleLine, self).on_change_product()
+        if plan:
+            self.cost_plan = plan
 
     def create_productions(self):
         pool = Pool()
