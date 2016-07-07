@@ -91,7 +91,6 @@ class SaleLine:
 
     def create_productions(self):
         pool = Pool()
-        Move = pool.get('stock.move')
         try:
             Operation = pool.get('production.operation')
         except KeyError:
@@ -111,11 +110,7 @@ class SaleLine:
                 if production.bom:
                     production.inputs = []
                     production.outputs = []
-                    changes = production.explode_bom()
-                    for _, input_vals in changes['inputs']['add']:
-                        production.inputs.append(Move(**input_vals))
-                    for _, output_vals in changes['outputs']['add']:
-                        production.outputs.append(Move(**output_vals))
+                    production.explode_bom()
 
                 if getattr(production, 'route', None) and Operation:
                     production.operations = []
@@ -306,7 +301,6 @@ class ChangeLineQuantity:
 
     def _change_production_quantity(self, production, quantity):
         pool = Pool()
-        Move = pool.get('stock.move')
         Operation = None
         try:
             Operation = pool.get('production.operation')
@@ -328,11 +322,7 @@ class ChangeLineQuantity:
         if production.bom:
             production.inputs = []
             production.outputs = []
-            changes = production.explode_bom()
-            for _, input_vals in changes['inputs']['add']:
-                production.inputs.append(Move(**input_vals))
-            for _, output_vals in changes['outputs']['add']:
-                production.outputs.append(Move(**output_vals))
+            production.explode_bom()
         production.save()
 
     def get_updateable_productions(self):
