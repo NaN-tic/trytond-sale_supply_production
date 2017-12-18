@@ -9,13 +9,12 @@ from .sale import *
 def register():
     Pool.register(
         Production,
-        Plan,
         ChangeQuantityStart,
         SaleLine,
         Sale,
         ChangeLineQuantityStart,
-        module='sale_cost_plan', type_='model')
+        module='sale_supply_production', type_='model')
     Pool.register(
         ChangeQuantity,
         ChangeLineQuantity,
-        module='sale_cost_plan', type_='wizard')
+        module='sale_supply_production', type_='wizard')

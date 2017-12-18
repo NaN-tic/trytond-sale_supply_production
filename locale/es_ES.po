@@ -40,10 +40,6 @@ msgstr ""
 "La línea \"%(line)s\" de la venta \"%(sale)s\" no tiene Plan de coste, por "
 "lo que no se generará ninguna producción."
 
-msgctxt "field:production,cost_plan:"
-msgid "Cost Plan"
-msgstr "Plan de costes"
-
 msgctxt "field:production.change_quantity.start,current_quantity:"
 msgid "Current Quantity"
 msgstr "Cantidad actual"

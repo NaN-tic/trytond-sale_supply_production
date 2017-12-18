@@ -29,7 +29,7 @@ Install production Module::
 
     >>> Module = Model.get('ir.module')
     >>> modules = Module.find([
-    ...     ('name', 'in', ['sale_cost_plan', 'sale_change_quantity'])])
+    ...     ('name', 'in', ['sale_supply_production', 'sale_change_quantity'])])
     >>> Module.install([x.id for x in modules], config.context)
     >>> Wizard('ir.module.install_upgrade').execute('upgrade')
 
