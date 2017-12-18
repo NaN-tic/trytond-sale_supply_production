@@ -31,7 +31,7 @@ class Sale:
             for line in sale.lines:
                 if (line.type == 'line' and line.product
                         and not getattr(line.product, 'purchasable', False)
-                        and not line.cost_plan):
+                        and hasattr(line, 'cost_plan') and not line.cost_plan):
                     cls.raise_user_warning('missing_cost_plan%s' % sale.id,
                         'missing_cost_plan', {
                             'sale': sale.rec_name,
@@ -73,18 +73,30 @@ class SaleLine:
         except KeyError:
             Operation = None
 
-        if self.type != 'line' or self.quantity <= 0 or not self.cost_plan:
-            return []
-        if len(self.productions) > 0:
+        if (self.type != 'line' or self.quantity <= 0
+                or hasattr(self, 'cost_plan') and not self.cost_plan
+                or len(self.productions) > 0):
             return []
 
+        if hasattr(self, 'cost_plan') and self.cost_plan:
+            productions_values = self.cost_plan.get_elegible_productions(
+                self.unit, self.quantity)
+        else:
+            production_values = {
+                'product': self.product,
+                'uom': self.unit,
+                'quantity': self.quantity,
+                }
+            if hasattr(self.product, 'bom') and self.product.bom:
+                producction_values.update({'bom': self.product.bom})
+            productions_values = [production_values]
+
         productions = []
-        for production_values in self.cost_plan.get_elegible_productions(
-                self.unit, self.quantity):
+        for production_values in productions_values:
             production = self.get_production(production_values)
 
             if production:
-                if production.bom:
+                if hasattr(production, 'bom') and production.bom:
                     production.inputs = []
                     production.outputs = []
                     production.explode_bom()
@@ -109,7 +121,8 @@ class SaleLine:
         production.company = self.sale.company
         production.warehouse = self.warehouse
         production.location = self.warehouse.production_location
-        production.cost_plan = self.cost_plan
+        if hasattr(self, 'cost_plan'):
+            production.cost_plan = self.cost_plan
         production.origin = str(self)
         production.reference = self.sale.reference
         production.state = 'draft'
