@@ -28,7 +28,7 @@ Create database::
 Install production Module::
 
     >>> Module = Model.get('ir.module')
-    >>> modules = Module.find([('name', '=', 'sale_cost_plan')])
+    >>> modules = Module.find([('name', '=', 'sale_supply_production')])
     >>> Module.install([x.id for x in modules], config.context)
     >>> Wizard('ir.module.install_upgrade').execute('upgrade')
 

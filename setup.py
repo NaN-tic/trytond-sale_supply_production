@@ -6,7 +6,7 @@ import re
 import os
 import ConfigParser
 
-MODULE = 'sale_cost_plan'
+MODULE = 'sale_supply_production'
 PREFIX = 'nantic'
 MODULE2PREFIX = {}
 
