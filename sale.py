@@ -51,7 +51,8 @@ class Sale:
     def create_productions(self):
         productions = []
         for line in self.lines:
-            productions += line.create_productions()
+            if line.supply_production:
+                productions += line.create_productions()
         return productions
 
     def get_productions(self, name):
@@ -64,7 +65,13 @@ class Sale:
 class SaleLine:
     __name__ = 'sale.line'
 
+    supply_production = fields.Boolean('Supply Production')
     productions = fields.One2Many('production', 'origin', 'Productions')
+
+    @staticmethod
+    def default_supply_production():
+        SaleConfiguration = Pool().get('sale.configuration')
+        return SaleConfiguration(1).sale_supply_production_default
 
     def create_productions(self):
         pool = Pool()

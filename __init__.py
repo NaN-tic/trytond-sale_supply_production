@@ -4,6 +4,7 @@
 from trytond.pool import Pool
 from .production import *
 from .sale import *
+from .configuration import *
 
 
 def register():
@@ -13,6 +14,7 @@ def register():
         SaleLine,
         Sale,
         ChangeLineQuantityStart,
+        Configuration,
         module='sale_supply_production', type_='model')
     Pool.register(
         ChangeQuantity,
