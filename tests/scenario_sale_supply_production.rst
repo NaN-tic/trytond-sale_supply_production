@@ -216,6 +216,11 @@ Sale product::
     >>> sale.lines.append(sale_line)
     >>> sale_line.product = product
     >>> sale_line.quantity = 2.0
+    >>> sale_line = SaleLine()
+    >>> sale.lines.append(sale_line)
+    >>> sale_line.product = product
+    >>> sale_line.quantity = 1.0
+    >>> sale_line.supply_production = False
     >>> sale.save()
     >>> Sale.quote([sale.id], config.context)
     >>> Sale.confirm([sale.id], config.context)
