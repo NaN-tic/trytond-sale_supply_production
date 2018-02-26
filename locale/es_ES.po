@@ -1,14 +1,6 @@
-# 
+#
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
-
-msgctxt "error:product.cost.plan:"
-msgid ""
-"No production can be created because Product Cost Plan \"%s\" has no BOM "
-"assigned."
-msgstr ""
-"No se puede crear la producción porque el plan de costes \"%s\" no tiene LdM"
-" asociada."
 
 msgctxt "error:production.change_quantity:"
 msgid ""
@@ -23,14 +15,6 @@ msgid ""
 msgstr ""
 "No puede modificar la cantidad de la producción \"%s\" porque no se "
 "encuentra en los estados \"Borrador\" ni \"En espera\"."
-
-msgctxt "error:sale.change_line_quantity:"
-msgid "Quantity already produced!"
-msgstr "¡Ya se ha producido esta cantidad!"
-
-msgctxt "error:sale.change_line_quantity:"
-msgid "There is no updateable production available!"
-msgstr "¡No hay producciones modificables!"
 
 msgctxt "error:sale.sale:"
 msgid ""
@@ -68,25 +52,34 @@ msgctxt "field:production.change_quantity.start,uom:"
 msgid "Uom"
 msgstr "UdM"
 
-msgctxt "field:sale.line,cost_plan:"
-msgid "Cost Plan"
-msgstr "Plan de costes"
+msgctxt "field:sale.configuration,sale_supply_production_default:"
+msgid "Sale Line Supply Production"
+msgstr "Producción de subministro de lineas de venta"
 
 msgctxt "field:sale.line,productions:"
 msgid "Productions"
 msgstr "Producciones"
 
+msgctxt "field:sale.line,supply_production:"
+msgid "Supply Production"
+msgstr "Producción de subministro"
+
 msgctxt "field:sale.sale,productions:"
 msgid "Productions"
 msgstr "Producciones"
 
+msgctxt "help:sale.configuration,sale_supply_production_default:"
+msgid "Default Supply Production value for Sale Lines"
+msgstr ""
+"Valor predeterminado de producción de subministro para lineas de venta"
+
+msgctxt "model:ir.action,name:"
+msgid "Change  Sale Quantity"
+msgstr "Modificar cantidad venta"
+
 msgctxt "model:ir.action,name:act_production_form"
 msgid "Productions"
 msgstr "Producciones"
-
-msgctxt "model:ir.action,name:wizard_production_change_quantity"
-msgid "Change  Sale Quantity"
-msgstr "Modificar cantidad venta"
 
 msgctxt "model:production.change_quantity.start,name:"
 msgid "Change Production Quantity - Start"
