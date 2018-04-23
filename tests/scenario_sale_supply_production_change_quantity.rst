@@ -29,7 +29,7 @@ Install production Module::
 
     >>> Module = Model.get('ir.module')
     >>> modules = Module.find([
-    ...     ('name', 'in', ['sale_cost_plan', 'sale_change_quantity'])])
+    ...     ('name', 'in', ['sale_supply_production', 'sale_change_quantity'])])
     >>> Module.install([x.id for x in modules], config.context)
     >>> Wizard('ir.module.install_upgrade').execute('upgrade')
 
@@ -191,15 +191,7 @@ Create Bill of Material::
     >>> product.boms.append(ProductBom(bom=bom))
     >>> product.save()
 
-Create a cost plan for product (without child boms)::
-
-    >>> CostPlan = Model.get('product.cost.plan')
-    >>> plan = CostPlan()
-    >>> plan.product = product
-    >>> plan.quantity = 1
-    >>> plan.click('compute')
-
-Sale product with the plan::
+Sale product::
 
     >>> Sale = Model.get('sale.sale')
     >>> SaleLine = Model.get('sale.line')
@@ -210,7 +202,6 @@ Sale product with the plan::
     >>> sale_line = SaleLine()
     >>> sale.lines.append(sale_line)
     >>> sale_line.product = product
-    >>> sale_line.cost_plan = plan
     >>> sale_line.quantity = 2.0
     >>> sale.click('quote')
     >>> sale.click('confirm')

@@ -13,12 +13,6 @@ __metaclass__ = PoolMeta
 class Production:
     __name__ = 'production'
 
-    cost_plan = fields.Many2One('product.cost.plan', 'Cost Plan',
-        states={
-            'readonly': ~Eval('state').in_(['request', 'draft']),
-            },
-        depends=['state'])
-
     @classmethod
     def _get_origin(cls):
         'Return list of Model names for origin Reference'
@@ -52,7 +46,7 @@ class ChangeQuantity(Wizard):
     __name__ = 'production.change_quantity'
 
     start = StateView('production.change_quantity.start',
-        'sale_cost_plan.production_change_quantity_start_view_form', [
+        'sale_supply_production.production_change_quantity_start_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Modify', 'modify', 'tryton-ok', default=True),
             ])

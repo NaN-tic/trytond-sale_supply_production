@@ -28,7 +28,7 @@ Create database::
 Install production Module::
 
     >>> Module = Model.get('ir.module')
-    >>> modules = Module.find([('name', '=', 'sale_cost_plan')])
+    >>> modules = Module.find([('name', '=', 'sale_supply_production')])
     >>> Module.install([x.id for x in modules], config.context)
     >>> Wizard('ir.module.install_upgrade').execute('upgrade')
 
@@ -203,17 +203,7 @@ Create Bill of Material::
     >>> product.boms.append(ProductBom(bom=bom))
     >>> product.save()
 
-Create a cost plan for product (without child boms)::
-
-    >>> CostPlan = Model.get('product.cost.plan')
-    >>> plan = CostPlan()
-    >>> plan.product = product
-    >>> plan.quantity = 1
-    >>> plan.save()
-    >>> CostPlan.compute([plan.id], config.context)
-    >>> plan.reload()
-
-Sale product with first plan::
+Sale product::
 
     >>> config.user = sale_user.id
     >>> Sale = Model.get('sale.sale')
@@ -225,8 +215,12 @@ Sale product with first plan::
     >>> sale_line = SaleLine()
     >>> sale.lines.append(sale_line)
     >>> sale_line.product = product
-    >>> sale_line.cost_plan = plan
     >>> sale_line.quantity = 2.0
+    >>> sale_line = SaleLine()
+    >>> sale.lines.append(sale_line)
+    >>> sale_line.product = product
+    >>> sale_line.quantity = 1.0
+    >>> sale_line.supply_production = False
     >>> sale.save()
     >>> Sale.quote([sale.id], config.context)
     >>> Sale.confirm([sale.id], config.context)
