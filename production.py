@@ -12,6 +12,7 @@ __metaclass__ = PoolMeta
 
 class Production:
     __name__ = 'production'
+    __metaclass__ = PoolMeta
 
     @classmethod
     def _get_origin(cls):
