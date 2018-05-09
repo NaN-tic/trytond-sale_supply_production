@@ -15,22 +15,16 @@ Imports::
     >>> from trytond.modules.company.tests.tools import create_company, \
     ...     get_company
     >>> from trytond.modules.account.tests.tools import create_fiscalyear, \
-    ...     create_chart, get_accounts, create_tax, set_tax_code
+    ...     create_chart, get_accounts, create_tax
     >>> from trytond.modules.account_invoice.tests.tools import \
     ...     set_fiscalyear_invoice_sequences, create_payment_term
+    >>> from trytond.tests.tools import activate_modules
     >>> today = datetime.date.today()
 
-Create database::
+Install product_cost_plan Module::
 
-    >>> config = config.set_trytond()
-    >>> config.pool.test = True
+    >>> config = activate_modules('sale_supply_production')
 
-Install production Module::
-
-    >>> Module = Model.get('ir.module')
-    >>> modules = Module.find([('name', '=', 'sale_supply_production')])
-    >>> Module.install([x.id for x in modules], config.context)
-    >>> Wizard('ir.module.install_upgrade').execute('upgrade')
 
 Create company::
 
@@ -100,15 +94,15 @@ Create product::
     >>> template.name = 'product'
     >>> template.default_uom = unit
     >>> template.type = 'goods'
-    >>> template.purchasable = True
+    >>> template.producible = True
     >>> template.salable = True
     >>> template.list_price = Decimal(30)
-    >>> template.cost_price = Decimal(20)
     >>> template.cost_price_method = 'fixed'
     >>> template.account_expense = expense
     >>> template.account_revenue = revenue
     >>> template.save()
     >>> product.template = template
+    >>> product.cost_price = Decimal(20)
     >>> product.save()
 
 Create Components::
@@ -121,9 +115,9 @@ Create Components::
     >>> templateA.default_uom = meter
     >>> templateA.type = 'goods'
     >>> templateA.list_price = Decimal(2)
-    >>> templateA.cost_price = Decimal(1)
     >>> templateA.save()
     >>> componentA.template = templateA
+    >>> componentA.cost_price = Decimal(1)
     >>> componentA.save()
 
     >>> componentB = Product()
@@ -132,9 +126,9 @@ Create Components::
     >>> templateB.default_uom = meter
     >>> templateB.type = 'goods'
     >>> templateB.list_price = Decimal(2)
-    >>> templateB.cost_price = Decimal(1)
     >>> templateB.save()
     >>> componentB.template = templateB
+    >>> componentB.cost_price = Decimal(1)
     >>> componentB.save()
 
     >>> component1 = Product()
@@ -143,9 +137,9 @@ Create Components::
     >>> template1.default_uom = unit
     >>> template1.type = 'goods'
     >>> template1.list_price = Decimal(5)
-    >>> template1.cost_price = Decimal(2)
     >>> template1.save()
     >>> component1.template = template1
+    >>> component1.cost_price = Decimal(2)
     >>> component1.save()
 
     >>> component2 = Product()
@@ -154,9 +148,9 @@ Create Components::
     >>> template2.default_uom = meter
     >>> template2.type = 'goods'
     >>> template2.list_price = Decimal(7)
-    >>> template2.cost_price = Decimal(5)
     >>> template2.save()
     >>> component2.template = template2
+    >>> component2.cost_price = Decimal(5)
     >>> component2.save()
 
 Create Bill of Material::
@@ -235,4 +229,3 @@ Sale product::
     True
     >>> production.quantity == 2.0
     True
-

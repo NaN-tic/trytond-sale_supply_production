@@ -7,11 +7,11 @@ from trytond.transaction import Transaction
 from trytond.wizard import Button, StateTransition, StateView, Wizard
 
 __all__ = ['Production', 'ChangeQuantityStart', 'ChangeQuantity']
-__metaclass__ = PoolMeta
 
 
 class Production:
     __name__ = 'production'
+    __metaclass__ = PoolMeta
 
     @classmethod
     def _get_origin(cls):

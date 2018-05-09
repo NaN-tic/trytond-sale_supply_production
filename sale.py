@@ -2,17 +2,17 @@
 # copyright notices and license terms.
 from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
-from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
 from .tools import prepare_vals
 
 __all__ = ['Sale', 'SaleLine', 'ChangeLineQuantityStart', 'ChangeLineQuantity']
-__metaclass__ = PoolMeta
 
 
 class Sale:
     __name__ = 'sale.sale'
+    __metaclass__ = PoolMeta
+
     productions = fields.Function(fields.One2Many('production', None,
         'Productions'), 'get_productions')
 
@@ -64,6 +64,7 @@ class Sale:
 
 class SaleLine:
     __name__ = 'sale.line'
+    __metaclass__ = PoolMeta
 
     supply_production = fields.Boolean('Supply Production')
     productions = fields.One2Many('production', 'origin', 'Productions')
@@ -95,7 +96,7 @@ class SaleLine:
                 'quantity': self.quantity,
                 }
             if hasattr(self.product, 'bom') and self.product.bom:
-                producction_values.update({'bom': self.product.bom})
+                production_values.update({'bom': self.product.bom})
             productions_values = [production_values]
 
         productions = []
@@ -163,6 +164,7 @@ class SaleLine:
 
 class ChangeLineQuantityStart:
     __name__ = 'sale.change_line_quantity.start'
+    __metaclass__ = PoolMeta
 
     def on_change_with_minimal_quantity(self):
         pool = Pool()
@@ -183,6 +185,7 @@ class ChangeLineQuantityStart:
 
 class ChangeLineQuantity:
     __name__ = 'sale.change_line_quantity'
+    __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):
