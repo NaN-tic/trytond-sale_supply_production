@@ -5,10 +5,8 @@ __all__ = ['Configuration']
 
 
 class Configuration:
-    'Sale Configuration'
     __name__ = 'sale.configuration'
     __metaclass__ = PoolMeta
-
     sale_supply_production_default = fields.Boolean(
         'Sale Line Supply Production',
         help='Default Supply Production value for Sale Lines')
