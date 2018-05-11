@@ -13,7 +13,6 @@ __all__ = ['Sale', 'SaleLine', 'ChangeLineQuantityStart', 'ChangeLineQuantity']
 class Sale:
     __name__ = 'sale.sale'
     __metaclass__ = PoolMeta
-
     productions = fields.Function(fields.One2Many('production', None,
         'Productions'), 'get_productions')
 
