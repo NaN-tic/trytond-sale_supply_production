@@ -21,10 +21,9 @@ Imports::
     >>> from trytond.tests.tools import activate_modules
     >>> today = datetime.date.today()
 
-Install product_cost_plan Module::
+Install sale_supply_production Module::
 
     >>> config = activate_modules('sale_supply_production')
-
 
 Create company::
 
@@ -96,12 +95,13 @@ Create product::
     >>> template.type = 'goods'
     >>> template.producible = True
     >>> template.salable = True
+    >>> template.producible = True
     >>> template.list_price = Decimal(30)
     >>> template.cost_price_method = 'fixed'
     >>> template.account_expense = expense
     >>> template.account_revenue = revenue
     >>> template.save()
-    >>> product.template = template
+    >>> product, = template.products
     >>> product.cost_price = Decimal(20)
     >>> product.save()
 
@@ -115,8 +115,9 @@ Create Components::
     >>> templateA.default_uom = meter
     >>> templateA.type = 'goods'
     >>> templateA.list_price = Decimal(2)
+    >>> templateA.producible = True
     >>> templateA.save()
-    >>> componentA.template = templateA
+    >>> componentA, = templateA.products
     >>> componentA.cost_price = Decimal(1)
     >>> componentA.save()
 
@@ -126,8 +127,9 @@ Create Components::
     >>> templateB.default_uom = meter
     >>> templateB.type = 'goods'
     >>> templateB.list_price = Decimal(2)
+    >>> templateB.producible = True
     >>> templateB.save()
-    >>> componentB.template = templateB
+    >>> componentB, = templateB.products
     >>> componentB.cost_price = Decimal(1)
     >>> componentB.save()
 
@@ -137,8 +139,9 @@ Create Components::
     >>> template1.default_uom = unit
     >>> template1.type = 'goods'
     >>> template1.list_price = Decimal(5)
+    >>> template1.producible = True
     >>> template1.save()
-    >>> component1.template = template1
+    >>> component1, = template1.products
     >>> component1.cost_price = Decimal(2)
     >>> component1.save()
 
@@ -148,8 +151,9 @@ Create Components::
     >>> template2.default_uom = meter
     >>> template2.type = 'goods'
     >>> template2.list_price = Decimal(7)
+    >>> template2.producible = True
     >>> template2.save()
-    >>> component2.template = template2
+    >>> component2, = template2.products
     >>> component2.cost_price = Decimal(5)
     >>> component2.save()
 
