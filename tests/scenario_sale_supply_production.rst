@@ -88,7 +88,6 @@ Create product::
     >>> unit, = ProductUom.find([('name', '=', 'Unit')])
     >>> ProductTemplate = Model.get('product.template')
     >>> Product = Model.get('product.product')
-    >>> product = Product()
     >>> template = ProductTemplate()
     >>> template.name = 'product'
     >>> template.default_uom = unit
@@ -105,11 +104,24 @@ Create product::
     >>> product.cost_price = Decimal(20)
     >>> product.save()
 
+    >>> template_s = ProductTemplate()
+    >>> template_s.name = 'product'
+    >>> template_s.default_uom = unit
+    >>> template_s.type = 'goods'
+    >>> template_s.salable = True
+    >>> template_s.list_price = Decimal(30)
+    >>> template_s.cost_price_method = 'fixed'
+    >>> template_s.account_expense = expense
+    >>> template_s.account_revenue = revenue
+    >>> template_s.save()
+    >>> product_s, = template_s.products
+    >>> product_s.cost_price = Decimal(20)
+    >>> product_s.save()
+
 Create Components::
 
     >>> meter, = ProductUom.find([('name', '=', 'Meter')])
     >>> centimeter, = ProductUom.find([('name', '=', 'centimeter')])
-    >>> componentA = Product()
     >>> templateA = ProductTemplate()
     >>> templateA.name = 'component A'
     >>> templateA.default_uom = meter
@@ -121,7 +133,6 @@ Create Components::
     >>> componentA.cost_price = Decimal(1)
     >>> componentA.save()
 
-    >>> componentB = Product()
     >>> templateB = ProductTemplate()
     >>> templateB.name = 'component B'
     >>> templateB.default_uom = meter
@@ -133,7 +144,6 @@ Create Components::
     >>> componentB.cost_price = Decimal(1)
     >>> componentB.save()
 
-    >>> component1 = Product()
     >>> template1 = ProductTemplate()
     >>> template1.name = 'component 1'
     >>> template1.default_uom = unit
@@ -145,7 +155,6 @@ Create Components::
     >>> component1.cost_price = Decimal(2)
     >>> component1.save()
 
-    >>> component2 = Product()
     >>> template2 = ProductTemplate()
     >>> template2.name = 'component 2'
     >>> template2.default_uom = meter
@@ -219,6 +228,11 @@ Sale product::
     >>> sale_line.product = product
     >>> sale_line.quantity = 1.0
     >>> sale_line.supply_production = False
+    >>> sale_line = SaleLine()
+    >>> sale.lines.append(sale_line)
+    >>> sale_line.product = product_s
+    >>> sale_line.quantity = 1.0
+    >>> sale_line.supply_production = True
     >>> sale.save()
     >>> Sale.quote([sale.id], config.context)
     >>> Sale.confirm([sale.id], config.context)

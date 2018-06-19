@@ -51,7 +51,9 @@ class Sale:
         productions = []
         for line in self.lines:
             if line.supply_production:
-                productions += line.create_productions()
+                new_productions = line.create_productions()
+                if new_productions:
+                    productions += new_productions
         return productions
 
     def get_productions(self, name):
@@ -64,7 +66,6 @@ class Sale:
 class SaleLine:
     __name__ = 'sale.line'
     __metaclass__ = PoolMeta
-
     supply_production = fields.Boolean('Supply Production')
     productions = fields.One2Many('production', 'origin', 'Productions')
 
@@ -73,17 +74,24 @@ class SaleLine:
         SaleConfiguration = Pool().get('sale.configuration')
         return SaleConfiguration(1).sale_supply_production_default
 
+    @fields.depends('product')
+    def on_change_product(self):
+        super(SaleLine, self).on_change_product()
+
+        if self.product:
+            self.supply_production = self.product.producible
+
+
     def create_productions(self):
         pool = Pool()
-        try:
-            Operation = pool.get('production.operation')
-        except KeyError:
-            Operation = None
 
-        if (self.type != 'line' or self.quantity <= 0
+        if (self.type != 'line'
+                or not self.product
+                or not self.product.template.producible
+                or self.quantity <= 0
                 or hasattr(self, 'cost_plan') and not self.cost_plan
                 or len(self.productions) > 0):
-            return []
+            return
 
         if hasattr(self, 'cost_plan') and self.cost_plan:
             productions_values = self.cost_plan.get_elegible_productions(
@@ -108,7 +116,8 @@ class SaleLine:
                     production.outputs = []
                     production.explode_bom()
 
-                if getattr(production, 'route', None) and Operation:
+                if getattr(production, 'route', None):
+                    Operation = pool.get('production.operation')
                     production.operations = []
                     changes = production.update_operations()
                     for _, operation_vals in changes['operations']['add']:
