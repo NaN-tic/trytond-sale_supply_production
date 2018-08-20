@@ -23,8 +23,7 @@ Imports::
 
 Install product_cost_plan Module::
 
-    >>> config = activate_modules('sale_supply_production')
-
+    >>> config = activate_modules(['sale_supply_production', 'sale_cost_plan'])
 
 Create company::
 
