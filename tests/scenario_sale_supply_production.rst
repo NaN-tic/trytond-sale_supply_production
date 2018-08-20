@@ -15,7 +15,7 @@ Imports::
     >>> from trytond.modules.company.tests.tools import create_company, \
     ...     get_company
     >>> from trytond.modules.account.tests.tools import create_fiscalyear, \
-    ...     create_chart, get_accounts, create_tax
+    ...     create_chart, get_accounts
     >>> from trytond.modules.account_invoice.tests.tools import \
     ...     set_fiscalyear_invoice_sequences, create_payment_term
     >>> from trytond.tests.tools import activate_modules
@@ -82,6 +82,15 @@ Configuration production location::
     >>> warehouse.production_location = production_location
     >>> warehouse.save()
 
+Create account category::
+
+    >>> ProductCategory = Model.get('product.category')
+    >>> account_category = ProductCategory(name="Account Category")
+    >>> account_category.accounting = True
+    >>> account_category.account_expense = expense
+    >>> account_category.account_revenue = revenue
+    >>> account_category.save()
+
 Create product::
 
     >>> ProductUom = Model.get('product.uom')
@@ -96,8 +105,7 @@ Create product::
     >>> template.salable = True
     >>> template.list_price = Decimal(30)
     >>> template.cost_price_method = 'fixed'
-    >>> template.account_expense = expense
-    >>> template.account_revenue = revenue
+    >>> template.account_category = account_category
     >>> template.save()
     >>> product.template = template
     >>> product.cost_price = Decimal(20)
@@ -110,8 +118,7 @@ Create product::
     >>> template_s.salable = True
     >>> template_s.list_price = Decimal(30)
     >>> template_s.cost_price_method = 'fixed'
-    >>> template_s.account_expense = expense
-    >>> template_s.account_revenue = revenue
+    >>> template_s.account_category = account_category
     >>> template_s.save()
     >>> product_s, = template_s.products
     >>> product_s.cost_price = Decimal(20)
