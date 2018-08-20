@@ -241,6 +241,32 @@ Sale product with first plan::
     >>> sale_line.product = product
     >>> sale_line.cost_plan = plan
     >>> sale_line.quantity = 2.0
+    >>> sale.save()
+    >>> sale.click('quote')
+    >>> sale.click('confirm')
+    >>> sale.click('process')
+    >>> sale.state
+    'processing'
+    >>> sale.reload()
+    >>> len(sale.productions) == 1
+    True
+    >>> production, = sale.productions
+    >>> production.product == product
+    True
+    >>> production.quantity == 2.0
+    True
+
+Warn if a line has no cost plan::
+
+    >>> sale = Sale()
+    >>> sale.party = customer
+    >>> sale.payment_term = payment_term
+    >>> sale.invoice_method = 'order'
+    >>> sale_line = SaleLine()
+    >>> sale.lines.append(sale_line)
+    >>> sale_line.product = product
+    >>> sale_line.cost_plan = plan
+    >>> sale_line.quantity = 2.0
     >>> sale_line = SaleLine()
     >>> sale.lines.append(sale_line)
     >>> sale_line.product = product
@@ -252,17 +278,8 @@ Sale product with first plan::
     >>> sale_line.quantity = 1.0
     >>> sale_line.supply_production = False
     >>> sale.save()
-    >>> Sale.quote([sale.id], config.context)
-    >>> Sale.confirm([sale.id], config.context)
-    >>> Sale.process([sale.id], config.context)
-    >>> sale.state
-    u'processing'
-    >>> sale.reload()
-    >>> len(sale.productions) == 1
-    True
-    >>> production, = sale.productions
-    >>> production.product == product
-    True
-    >>> production.quantity == 2.0
-    True
-
+    >>> sale.click('quote')
+    >>> sale.click('confirm') # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+        ...
+    UserWarning: ...

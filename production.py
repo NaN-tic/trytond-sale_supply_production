@@ -10,9 +10,8 @@ __all__ = ['Production', 'ChangeQuantityStart', 'ChangeQuantity']
 __metaclass__ = PoolMeta
 
 
-class Production:
+class Production(metaclass=PoolMeta):
     __name__ = 'production'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def _get_origin(cls):

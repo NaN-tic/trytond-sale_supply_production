@@ -4,9 +4,8 @@ from trytond.pool import PoolMeta
 __all__ = ['Configuration']
 
 
-class Configuration:
+class Configuration(metaclass=PoolMeta):
     __name__ = 'sale.configuration'
-    __metaclass__ = PoolMeta
     sale_supply_production_default = fields.Boolean(
         'Sale Line Supply Production',
         help='Default Supply Production value for Sale Lines')

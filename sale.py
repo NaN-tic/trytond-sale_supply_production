@@ -2,7 +2,6 @@
 # copyright notices and license terms.
 from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
-from trytond.pyson import Eval
 from trytond.transaction import Transaction
 
 from .tools import prepare_vals
@@ -10,9 +9,8 @@ from .tools import prepare_vals
 __all__ = ['Sale', 'SaleLine', 'ChangeLineQuantityStart', 'ChangeLineQuantity']
 
 
-class Sale:
+class Sale(metaclass=PoolMeta):
     __name__ = 'sale.sale'
-    __metaclass__ = PoolMeta
     productions = fields.Function(fields.One2Many('production', None,
         'Productions'), 'get_productions')
 
@@ -64,9 +62,8 @@ class Sale:
         return productions
 
 
-class SaleLine:
+class SaleLine(metaclass=PoolMeta):
     __name__ = 'sale.line'
-    __metaclass__ = PoolMeta
     supply_production = fields.Boolean('Supply Production')
     productions = fields.One2Many('production', 'origin', 'Productions')
 
@@ -82,10 +79,8 @@ class SaleLine:
         if self.product:
             self.supply_production = self.product.producible
 
-
     def create_productions(self):
         pool = Pool()
-
         if (self.type != 'line'
                 or not self.product
                 or not self.product.template.producible
@@ -242,9 +237,8 @@ class Plan:
         return res
 
 
-class ChangeLineQuantityStart:
+class ChangeLineQuantityStart(metaclass=PoolMeta):
     __name__ = 'sale.change_line_quantity.start'
-    __metaclass__ = PoolMeta
 
     def on_change_with_minimal_quantity(self):
         pool = Pool()
@@ -263,9 +257,8 @@ class ChangeLineQuantityStart:
         return max(minimal_quantity, produced_quantity)
 
 
-class ChangeLineQuantity:
+class ChangeLineQuantity(metaclass=PoolMeta):
     __name__ = 'sale.change_line_quantity'
-    __metaclass__ = PoolMeta
 
     @classmethod
     def __setup__(cls):
