@@ -107,7 +107,7 @@ Create product::
     >>> template.cost_price_method = 'fixed'
     >>> template.account_category = account_category
     >>> template.save()
-    >>> product.template = template
+    >>> product, = template.products
     >>> product.cost_price = Decimal(20)
     >>> product.save()
 
@@ -115,6 +115,7 @@ Create product::
     >>> template_s.name = 'product'
     >>> template_s.default_uom = unit
     >>> template_s.type = 'goods'
+    >>> template_s.producible = True
     >>> template_s.salable = True
     >>> template_s.list_price = Decimal(30)
     >>> template_s.cost_price_method = 'fixed'
@@ -130,41 +131,45 @@ Create Components::
     >>> centimeter, = ProductUom.find([('name', '=', 'centimeter')])
     >>> templateA = ProductTemplate()
     >>> templateA.name = 'component A'
+    >>> templateA.producible = True
     >>> templateA.default_uom = meter
     >>> templateA.type = 'goods'
     >>> templateA.list_price = Decimal(2)
     >>> templateA.save()
-    >>> componentA.template = templateA
+    >>> componentA, = templateA.products
     >>> componentA.cost_price = Decimal(1)
     >>> componentA.save()
 
     >>> templateB = ProductTemplate()
     >>> templateB.name = 'component B'
+    >>> templateB.producible = True
     >>> templateB.default_uom = meter
     >>> templateB.type = 'goods'
     >>> templateB.list_price = Decimal(2)
     >>> templateB.save()
-    >>> componentB.template = templateB
+    >>> componentB, = templateB.products
     >>> componentB.cost_price = Decimal(1)
     >>> componentB.save()
 
     >>> template1 = ProductTemplate()
     >>> template1.name = 'component 1'
+    >>> template1.producible = True
     >>> template1.default_uom = unit
     >>> template1.type = 'goods'
     >>> template1.list_price = Decimal(5)
     >>> template1.save()
-    >>> component1.template = template1
+    >>> component1, = template1.products
     >>> component1.cost_price = Decimal(2)
     >>> component1.save()
 
     >>> template2 = ProductTemplate()
     >>> template2.name = 'component 2'
+    >>> template2.producible = True
     >>> template2.default_uom = meter
     >>> template2.type = 'goods'
     >>> template2.list_price = Decimal(7)
     >>> template2.save()
-    >>> component2.template = template2
+    >>> component2, = template2.products
     >>> component2.cost_price = Decimal(5)
     >>> component2.save()
 
@@ -245,7 +250,7 @@ Sale product with first plan::
     >>> sale.lines.append(sale_line)
     >>> sale_line.product = product_s
     >>> sale_line.quantity = 1.0
-    >>> sale_line.supply_production = True
+    >>> sale_line.supply_production = False
     >>> sale.save()
     >>> Sale.quote([sale.id], config.context)
     >>> Sale.confirm([sale.id], config.context)

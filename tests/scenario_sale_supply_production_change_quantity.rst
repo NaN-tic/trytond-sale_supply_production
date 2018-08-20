@@ -94,7 +94,7 @@ Create product::
     >>> template.list_price = Decimal(30)
     >>> template.account_category = account_category
     >>> template.save()
-    >>> product.template = template
+    >>> product, = template.products
     >>> product.cost_price = Decimal(20)
     >>> product.cost_price_method = 'fixed'
     >>> product.save()
@@ -109,7 +109,7 @@ Create Components::
     >>> templateA.type = 'goods'
     >>> templateA.list_price = Decimal(2)
     >>> templateA.save()
-    >>> componentA.template = templateA
+    >>> componentA, = templateA.products
     >>> componentA.cost_price = Decimal(1)
     >>> componentA.save()
 
@@ -119,7 +119,7 @@ Create Components::
     >>> templateB.type = 'goods'
     >>> templateB.list_price = Decimal(2)
     >>> templateB.save()
-    >>> componentB.template = templateB
+    >>> componentB, = templateB.products
     >>> componentB.cost_price = Decimal(1)
     >>> componentB.save()
 
@@ -130,7 +130,7 @@ Create Components::
     >>> template1.list_price = Decimal(5)
     >>> template1.producible = True
     >>> template1.save()
-    >>> component1.template = template1
+    >>> component1, = template1.products
     >>> component1.cost_price = Decimal(2)
     >>> component1.save()
 
@@ -141,7 +141,7 @@ Create Components::
     >>> template2.list_price = Decimal(7)
     >>> template2.cost_price = Decimal(5)
     >>> template2.save()
-    >>> component2.template = template2
+    >>> component2, = template2.products
     >>> component2.cost_price = Decimal(5)
     >>> component2.save()
 
