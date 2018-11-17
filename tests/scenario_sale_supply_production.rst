@@ -255,6 +255,10 @@ Sale product with first plan::
     True
     >>> production.quantity == 2.0
     True
+    >>> len(production.inputs)
+    2
+    >>> len(production.outputs)
+    1
 
 Warn if a line has no cost plan::
 

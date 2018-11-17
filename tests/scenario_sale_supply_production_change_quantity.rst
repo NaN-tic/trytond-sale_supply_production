@@ -212,6 +212,10 @@ Sale product::
     True
     >>> production.quantity
     2.0
+    >>> len(production.inputs)
+    2
+    >>> len(production.outputs)
+    1
 
 
 Increase quantity and check production is updated::

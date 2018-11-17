@@ -98,8 +98,8 @@ class SaleLine(metaclass=PoolMeta):
                 'uom': self.unit,
                 'quantity': self.quantity,
                 }
-            if hasattr(self.product, 'bom') and self.product.bom:
-                production_values.update({'bom': self.product.bom})
+            if self.product.boms:
+                production_values.update({'bom': self.product.boms[0].bom})
             productions_values = [production_values]
 
         productions = []
