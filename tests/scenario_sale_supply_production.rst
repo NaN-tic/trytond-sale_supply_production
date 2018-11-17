@@ -222,6 +222,10 @@ Sale product::
     >>> sale_line = SaleLine()
     >>> sale.lines.append(sale_line)
     >>> sale_line.product = product
+    >>> len(production.inputs)
+    2
+    >>> len(production.outputs)
+    1
     >>> sale_line.quantity = 2.0
     >>> sale_line = SaleLine()
     >>> sale.lines.append(sale_line)
