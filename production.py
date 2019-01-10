@@ -52,19 +52,6 @@ class ChangeQuantity(Wizard):
             ])
     modify = StateTransition()
 
-    @classmethod
-    def __setup__(cls):
-        super(ChangeQuantity, cls).__setup__()
-        cls._error_messages.update({
-                'invalid_production_state': (
-                    'You cannot modify the quantity of Production "%s" '
-                    'because it is not in state "Draft" or "Waiting".'),
-                'production_no_related_to_sale': (
-                    'The Production "%s" is not related to any sale.\n'
-                    'In this case, you can\'t use this wizard but you can '
-                    'modify the quantity directly in production\'s form.'),
-                })
-
     def default_start(self, fields):
         pool = Pool()
         Production = pool.get('production')
@@ -72,10 +59,12 @@ class ChangeQuantity(Wizard):
 
         production = Production(Transaction().context['active_id'])
         if production.state not in ('draft', 'waiting'):
-            self.raise_user_error('invalid_production_state',
-                production.rec_name)
+            raise UserError(gettext(
+                'sale_supply_production.invalid_production_state',
+                production=production.rec_name))
         if not isinstance(production.origin, SaleLine):
-            self.raise_user_error('production_no_related_to_sale')
+            raise UserError(gettext(
+                'sale_supply_production._no_related_to_sale'))
         return {
             'production': production.id,
             'sale_line': production.origin.id,

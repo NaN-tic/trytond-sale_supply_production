@@ -3,6 +3,8 @@
 from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
 from trytond.transaction import Transaction
+from trytond.i18n import gettext
+from trytond.exceptions import UserError, UserWarning
 
 from .tools import prepare_vals
 
@@ -15,26 +17,16 @@ class Sale(metaclass=PoolMeta):
         'Productions'), 'get_productions')
 
     @classmethod
-    def __setup__(cls):
-        super(Sale, cls).__setup__()
-        cls._error_messages.update({
-                'missing_cost_plan': (
-                    'The line "%(line)s" of sale "%(sale)s" doesn\'t have '
-                    'Cost Plan, so it won\'t generate any production.'),
-                })
-
-    @classmethod
     def confirm(cls, sales):
         for sale in sales:
             for line in sale.lines:
                 if (line.type == 'line' and line.product
                         and not getattr(line.product, 'purchasable', False)
                         and hasattr(line, 'cost_plan') and not line.cost_plan):
-                    cls.raise_user_warning('missing_cost_plan%s' % sale.id,
-                        'missing_cost_plan', {
-                            'sale': sale.rec_name,
-                            'line': line.rec_name,
-                            })
+                    raise UserWarning('missing_cost_plan%s' % sale.id,
+                        gettext('sale_supply_production.missing_cost_plan',
+                            sale=sale.rec_name,
+                            line=line.rec_name))
         super(Sale, cls).confirm(sales)
 
     @classmethod
@@ -169,23 +161,15 @@ class SaleLine(metaclass=PoolMeta):
 class Plan:
     __name__ = 'product.cost.plan'
 
-    @classmethod
-    def __setup__(cls):
-        super(Plan, cls).__setup__()
-        cls._error_messages.update({
-                'cannot_create_productions_missing_bom': ('No production can '
-                    'be created because Product Cost Plan "%s" has no BOM '
-                    'assigned.')
-                })
-
     def get_elegible_productions(self, unit, quantity):
         """
         Returns a list of dicts with the required data to create all the
         productions required for this plan
         """
         if not self.bom:
-            self.raise_user_error('cannot_create_productions_missing_bom',
-                self.rec_name)
+            raise UserError(gettext(
+                'sale_supply_production.cannot_create_productions_missing_bom',
+                cost_plan=self.rec_name))
 
         prod = {
             'product': self.product,
@@ -260,15 +244,6 @@ class ChangeLineQuantityStart(metaclass=PoolMeta):
 class ChangeLineQuantity(metaclass=PoolMeta):
     __name__ = 'sale.change_line_quantity'
 
-    @classmethod
-    def __setup__(cls):
-        super(ChangeLineQuantity, cls).__setup__()
-        cls._error_messages.update({
-                'quantity_already_produced': 'Quantity already produced!',
-                'no_updateable_productions': ('There is no updateable '
-                    'production available!'),
-                })
-
     def transition_modify(self):
         line = self.start.line
         if (line.quantity != self.start.new_quantity
@@ -289,7 +264,8 @@ class ChangeLineQuantity(metaclass=PoolMeta):
                 quantity -= Uom.compute_qty(production.uom,
                     production.quantity, self.start.line.unit)
         if quantity < 0:
-            self.raise_user_error('quantity_already_produced')
+            raise UserError(gettext(
+                'sale_supply_production.quantity_already_produced'))
 
         updateable_productions = self.get_updateable_productions()
         if quantity >= line.unit.rounding:
@@ -333,7 +309,8 @@ class ChangeLineQuantity(metaclass=PoolMeta):
                 if p.state in ('draft', 'waiting')],
             key=self._production_key)
         if not productions:
-            self.raise_user_error('no_updateable_productions')
+            raise UserError(gettext(
+                'sale_supply_production.no_updateable_productions'))
         return productions
 
     def _production_key(self, production):
