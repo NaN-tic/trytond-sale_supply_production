@@ -81,10 +81,8 @@ class SaleLine:
         if self.product:
             self.supply_production = self.product.producible
 
-
     def create_productions(self):
         pool = Pool()
-
         if (self.type != 'line'
                 or not self.product
                 or not self.product.template.producible
@@ -103,7 +101,12 @@ class SaleLine:
                 'quantity': self.quantity,
                 }
             if self.product.boms:
-                production_values.update({'bom': self.product.boms[0].bom})
+                product_bom = self.product.boms[0]
+                production_values.update({'bom': product_bom.bom})
+                if getattr(product_bom, 'route', None):
+                    production_values.update({'route': product_bom.route})
+                if getattr(product_bom, 'process', None):
+                    production_values.update({'process': product_bom.process})
             productions_values = [production_values]
 
         productions = []
@@ -111,19 +114,14 @@ class SaleLine:
             production = self.get_production(production_values)
 
             if production:
-                if hasattr(production, 'bom') and production.bom:
+                if getattr(production, 'bom', None):
                     production.inputs = []
                     production.outputs = []
                     production.explode_bom()
 
                 if getattr(production, 'route', None):
-                    Operation = pool.get('production.operation')
                     production.operations = []
-                    changes = production.update_operations()
-                    for _, operation_vals in changes['operations']['add']:
-                        operation_vals = prepare_vals(operation_vals)
-                        production.operations.append(
-                            Operation(**operation_vals))
+                    production.on_change_route()
 
                 production.save()
                 productions.append(production)
