@@ -1,0 +1,73 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:sale.configuration,sale_supply_production_default:"
+msgid "Sale Line Supply Production"
+msgstr "Producción de suministro de línea de venta"
+
+msgctxt "field:sale.line,productions:"
+msgid "Productions"
+msgstr "Producciones"
+
+msgctxt "field:sale.line,supply_production:"
+msgid "Supply Production"
+msgstr "Producción de suministro"
+
+msgctxt "field:sale.sale,productions:"
+msgid "Productions"
+msgstr "Producciones"
+
+msgctxt "help:sale.configuration,sale_supply_production_default:"
+msgid "Default Supply Production value for Sale Lines"
+msgstr "Valor predeterminado de producción de suministro para líneas de venta"
+
+msgctxt "model:ir.action,name:act_production_form"
+msgid "Productions"
+msgstr "Producciones"
+
+msgctxt "model:ir.action,name:wizard_production_change_quantity"
+msgid "Change Sale Quantity"
+msgstr "Cambiar la cantidad de venta"
+
+msgctxt "model:ir.message,text:cannot_create_productions_missing_bom"
+msgid ""
+"No production can be created because Product Cost Plan \"%(cost_plan)s\" has"
+" no BOM assigned."
+msgstr ""
+"No se puede crear la producción porque el plan de costes del producto "
+"\"%(cost_plan)s\" no tiene una lista de materiales asignada."
+
+msgctxt "model:ir.message,text:invalid_production_state"
+msgid ""
+"You cannot modify the quantity of Production \"%(production)s\" because it "
+"is not in state \"Draft\" or \"Waiting\"."
+msgstr ""
+"No puede modificar la cantidad de la producción \"%(production)s\" porque no"
+" está en estado \"Borrador\" o \"En espera\"."
+
+msgctxt "model:ir.message,text:missing_cost_plan"
+msgid ""
+"The line \"%(line)s\" of sale \"%(sale)s\" doesn\\'t have Cost Plan, so it "
+"won\\'t generate any production."
+msgstr ""
+"La línea \"%(line)s\" de la venta \"%(sale)s\" no tiene un plan de costes, "
+"por lo que no generará ninguna producción."
+
+msgctxt "model:ir.message,text:no_updateable_productions"
+msgid "There is no updateable production available!"
+msgstr "¡No hay producción actualizable disponible!"
+
+msgctxt "model:ir.message,text:production_no_related_to_sale"
+msgid ""
+"The Production \"%(production)s\" is not related to any sale.\\n In this "
+"case, you can\\'t use this wizard but you can modify the quantity directly "
+"in production\\'s form."
+msgstr ""
+"La producción \"%(production)s\" no está relacionada con ninguna venta.\\n "
+"En este caso, no puede usar este asistente, pero puede modificar la cantidad"
+" directamente en el formulario de producción."
+
+msgctxt "model:ir.message,text:quantity_already_produced"
+msgid "Quantity already produced!"
+msgstr "¡Cantidad ya producida!"
