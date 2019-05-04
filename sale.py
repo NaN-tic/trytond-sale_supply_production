@@ -18,15 +18,18 @@ class Sale(metaclass=PoolMeta):
 
     @classmethod
     def confirm(cls, sales):
+        Warning = Pool().get('res.user.warning')
         for sale in sales:
             for line in sale.lines:
+                key = 'missing_cost_plan_%s' % sale.id
                 if (line.type == 'line' and line.product
                         and not getattr(line.product, 'purchasable', False)
                         and hasattr(line, 'cost_plan') and not line.cost_plan):
-                    raise UserWarning('missing_cost_plan%s' % sale.id,
-                        gettext('sale_supply_production.missing_cost_plan',
-                            sale=sale.rec_name,
-                            line=line.rec_name))
+                    if Warning.check(key):
+                        raise UserWarning(key,
+                            gettext('sale_supply_production.missing_cost_plan',
+                                sale=sale.rec_name,
+                                line=line.rec_name))
         super(Sale, cls).confirm(sales)
 
     @classmethod
@@ -79,7 +82,7 @@ class SaleLine(metaclass=PoolMeta):
                 or self.quantity <= 0
                 or hasattr(self, 'cost_plan') and not self.cost_plan
                 or len(self.productions) > 0):
-            return
+            return []
 
         if hasattr(self, 'cost_plan') and self.cost_plan:
             productions_values = self.cost_plan.get_elegible_productions(
