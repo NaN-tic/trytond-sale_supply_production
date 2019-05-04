@@ -52,7 +52,7 @@ msgid ""
 "The line \"%(line)s\" of sale \"%(sale)s\" doesn\\'t have Cost Plan, so it "
 "won\\'t generate any production."
 msgstr ""
-"La línia \"%(line)s\" de la venda \"%(sale) \" no té un pla de costos, de "
+"La línia \"%(line)s\" de la venda \"%(sale)s \" no té un pla de costos, de "
 "manera que no generarà cap producció."
 
 msgctxt "model:ir.message,text:no_updateable_productions"
