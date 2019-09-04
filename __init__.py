@@ -18,6 +18,10 @@ def register():
         production.ChangeQuantity,
         module='sale_supply_production', type_='wizard')
     Pool.register(
+        sale.ChangeLineQuantityStart,
+        depends=['sale_change_quantity'],
+        module='sale_supply_production', type_='model')
+    Pool.register(
         sale.ChangeLineQuantity,
         depends=['sale_change_quantity'],
         module='sale_supply_production', type_='wizard')
