@@ -27,8 +27,7 @@
                 eval="[('origin.sale.id', 'in', Eval('active_ids'), 'sale.line')]"
                 pyson="1"/>
         </record>
-        <record model="ir.action.keyword"
-                id="act_open_production_keyword1">
+        <record model="ir.action.keyword"  id="act_open_production_keyword1">
             <field name="keyword">form_relate</field>
             <field name="model">sale.sale,-1</field>
             <field name="action" ref="act_production_form"/>

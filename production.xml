@@ -1,5 +1,5 @@
 <tryton>
-    <data depends="sale_change_quantity">
+    <data>
         <!-- production.change_quantity -->
         <record model="ir.ui.view" id="production_change_quantity_start_view_form">
             <field name="model">production.change_quantity.start</field>
@@ -12,17 +12,17 @@
             <field name="wiz_name">production.change_quantity</field>
             <field name="model">production</field>
         </record>
-        <record model="ir.action.keyword"
-                id="act_wizard_production_change_quantity_keyword">
+        <record model="ir.action.keyword" id="act_wizard_production_change_quantity_keyword">
             <field name="keyword">form_action</field>
             <field name="model">production,-1</field>
             <field name="action" ref="wizard_production_change_quantity"/>
         </record>
-        <record model="ir.action-res.group"
-                id="wizard_production_change_quantity-group_sale_change_line_quantity">
+    </data>
+
+    <data depends="sale_change_quantity">
+        <record model="ir.action-res.group" id="wizard_production_change_quantity-group_sale_change_line_quantity">
             <field name="action" ref="wizard_production_change_quantity"/>
-            <field name="group"
-                ref="sale_change_quantity.group_sale_change_line_quantity"/>
+            <field name="group" ref="sale_change_quantity.group_sale_change_line_quantity"/>
         </record>
     </data>
 </tryton>
