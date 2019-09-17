@@ -290,16 +290,8 @@ class ChangeLineQuantity(metaclass=PoolMeta):
 
         production.quantity = quantity
         if getattr(production, 'route', None):
-            changes = production.update_operations()
-            if changes and changes.get('operations'):
-                if changes['operations'].get('remove'):
-                    Operation.delete([
-                            Operation(o)
-                            for o in changes['operations']['remove']])
-                production.operations = []
-                for _, operation_vals in changes['operations']['add']:
-                    operation_vals = prepare_vals(operation_vals)
-                    production.operations.append(Operation(**operation_vals))
+            production.on_change_route()
+                        
         if production.bom:
             production.inputs = []
             production.outputs = []
