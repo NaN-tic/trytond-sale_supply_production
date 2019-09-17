@@ -72,3 +72,7 @@ msgstr ""
 msgctxt "model:ir.message,text:quantity_already_produced"
 msgid "Quantity already produced!"
 msgstr "Quantitat ja produïda!"
+
+msgctxt "model:ir.message,text:production_with_same_origin"
+msgid "Cannot change Sale Line quantity because there ara more than one production \"%(productions)s\" with same Sale line \"%(sale_line)s\" "
+msgstr "No es pot canviar la quantitat de la venda perque hi ha més d'una producció \"%(productions)s\" amb la mateixa línia de venda \"%(sale_line)s\"

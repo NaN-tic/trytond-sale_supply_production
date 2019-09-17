@@ -258,7 +258,6 @@ class ChangeLineQuantity(metaclass=PoolMeta):
         pool = Pool()
         Production = pool.get('production')
         Uom = pool.get('product.uom')
-
         line = self.start.line
         quantity = self.start.new_quantity
 
@@ -269,7 +268,6 @@ class ChangeLineQuantity(metaclass=PoolMeta):
         if quantity < 0:
             raise UserError(gettext(
                 'sale_supply_production.quantity_already_produced'))
-
         updateable_productions = self.get_updateable_productions()
         if quantity >= line.unit.rounding:
             production = updateable_productions.pop(0)
@@ -291,7 +289,7 @@ class ChangeLineQuantity(metaclass=PoolMeta):
         production.quantity = quantity
         if getattr(production, 'route', None):
             production.on_change_route()
-                        
+
         if production.bom:
             production.inputs = []
             production.outputs = []
