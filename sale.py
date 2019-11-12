@@ -6,8 +6,6 @@ from trytond.transaction import Transaction
 from trytond.i18n import gettext
 from trytond.exceptions import UserError, UserWarning
 
-from .tools import prepare_vals
-
 __all__ = ['Sale', 'SaleLine', 'ChangeLineQuantityStart', 'ChangeLineQuantity']
 
 
@@ -19,17 +17,20 @@ class Sale(metaclass=PoolMeta):
     @classmethod
     def confirm(cls, sales):
         Warning = Pool().get('res.user.warning')
+
         for sale in sales:
+            warning_lines = False
             for line in sale.lines:
-                key = 'missing_cost_plan_%s' % sale.id
                 if (line.type == 'line' and line.product
                         and not getattr(line.product, 'purchasable', False)
                         and hasattr(line, 'cost_plan') and not line.cost_plan):
-                    if Warning.check(key):
-                        raise UserWarning(key,
-                            gettext('sale_supply_production.missing_cost_plan',
-                                sale=sale.rec_name,
-                                line=line.rec_name))
+                    warning_lines = True
+                    break
+            key = 'missing_cost_plan_%s' % sale.id
+            if warning_lines and Warning.check(key):
+                raise UserWarning(key,
+                    gettext('sale_supply_production.missing_cost_plan',
+                        sale=sale.rec_name))
         super(Sale, cls).confirm(sales)
 
     @classmethod
@@ -75,7 +76,6 @@ class SaleLine(metaclass=PoolMeta):
             self.supply_production = self.product.producible
 
     def create_productions(self):
-        pool = Pool()
         if (self.type != 'line'
                 or not self.product
                 or not self.product.template.producible
@@ -279,13 +279,6 @@ class ChangeLineQuantity(metaclass=PoolMeta):
             Production.delete(updateable_productions)
 
     def _change_production_quantity(self, production, quantity):
-        pool = Pool()
-        Operation = None
-        try:
-            Operation = pool.get('production.operation')
-        except KeyError:
-            pass
-
         production.quantity = quantity
         if getattr(production, 'route', None):
             production.on_change_route()
