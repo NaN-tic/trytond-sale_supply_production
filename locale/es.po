@@ -48,10 +48,10 @@ msgstr ""
 
 msgctxt "model:ir.message,text:missing_cost_plan"
 msgid ""
-"The line \"%(line)s\" of sale \"%(sale)s\" doesn\\'t have Cost Plan, so it "
+"There are some lines of sale \"%(sale)s\" doesn\\'t have Cost Plan, so it "
 "won\\'t generate any production."
 msgstr ""
-"La línea \"%(line)s\" de la venta \"%(sale)s\" no tiene un plan de costes, "
+"Hay algunas líneas de la venta \"%(sale)s\" no tiene un plan de costes, "
 "por lo que no generará ninguna producción."
 
 msgctxt "model:ir.message,text:no_updateable_productions"
