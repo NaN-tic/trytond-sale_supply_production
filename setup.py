@@ -10,7 +10,6 @@ from configparser import ConfigParser
 MODULE = 'sale_supply_production'
 PREFIX = 'nantic'
 MODULE2PREFIX = {
-    'production_origin': 'nantic',
     'sale_change_quantity': 'nantic',
     'sale_cost_plan': 'nantic',
     'sale_discount': 'trytonspain',
@@ -68,12 +67,6 @@ else:
     branch = series
 
 dependency_links = [
-    ('hg+https://bitbucket.org/nantic/'
-        'trytond-production_origin@%(branch)s'
-        '#egg=nantic-production_origin-%(series)s' % {
-            'branch': branch,
-            'series': series,
-            }),
     ('hg+https://bitbucket.org/nantic/'
         'trytond-sale_change_quantity@%(branch)s'
         '#egg=nantic-sale_change_quantity-%(series)s' % {
