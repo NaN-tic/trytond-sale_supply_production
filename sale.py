@@ -36,7 +36,7 @@ class Sale(metaclass=PoolMeta):
     @classmethod
     def process(cls, sales):
         for sale in sales:
-            if sale.state in ('done', 'cancel'):
+            if sale.state in ('done', 'cancelled'):
                 continue
             with Transaction().set_user(0, set_context=True):
                 sale.create_productions()
@@ -237,7 +237,7 @@ class ChangeLineQuantityStart(metaclass=PoolMeta):
         produced_quantity = 0
         productions = self.line.productions if self.line else []
         for production in productions:
-            if production.state in ('assigned', 'running', 'done', 'cancel'):
+            if production.state in ('assigned', 'running', 'done', 'cancelled'):
                 produced_quantity += Uom.compute_qty(production.uom,
                     production.quantity, self.line.unit)
 
@@ -262,7 +262,7 @@ class ChangeLineQuantity(metaclass=PoolMeta):
         quantity = self.start.new_quantity
 
         for production in line.productions:
-            if production.state in ('assigned', 'running', 'done', 'cancel'):
+            if production.state in ('assigned', 'running', 'done', 'cancelled'):
                 quantity -= Uom.compute_qty(production.uom,
                     production.quantity, self.start.line.unit)
         if quantity < 0:
