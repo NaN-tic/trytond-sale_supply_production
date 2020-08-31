@@ -1,10 +1,6 @@
-==============================================
-Sale Cost Plan (with Change quantity) Scenario
-==============================================
-
-=============
-General Setup
-=============
+===============================
+Sale Supply Production Scenario
+===============================
 
 Imports::
 
@@ -21,7 +17,7 @@ Imports::
     >>> from trytond.tests.tools import activate_modules
     >>> today = datetime.date.today()
 
-Install product_cost_plan Module::
+Activate modules::
 
     >>> config = activate_modules(['sale_supply_production',
     ...   'sale_change_quantity'])

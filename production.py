@@ -10,15 +10,13 @@ from trytond.exceptions import UserError
 
 __all__ = ['Production', 'ChangeQuantityStart', 'ChangeQuantity']
 
+
 class Production(metaclass=PoolMeta):
     __name__ = 'production'
 
     @classmethod
     def _get_origin(cls):
-        'Return list of Model names for origin Reference'
-        origins = super(Production, cls)._get_origin()
-        origins.append('sale.line')
-        return origins
+        return super()._get_origin() | {'sale.line'}
 
 
 class ChangeQuantityStart(ModelView):
