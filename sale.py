@@ -139,8 +139,8 @@ class SaleLine(metaclass=PoolMeta):
         if hasattr(Production, 'stock_owner'):
             production.stock_owner = self.sale.party
         if (hasattr(Production, 'quality_template') and
-                production.product.quality_template):
-            production.quality_template = production.product.quality_template
+                production.product.template.quality_template):
+            production.quality_template = production.product.template.quality_template
 
         if 'process' in values:
             production.process = values['process']
