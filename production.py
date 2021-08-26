@@ -26,17 +26,15 @@ class ChangeQuantityStart(ModelView):
     production = fields.Many2One('production', 'Production', readonly=True)
     sale_line = fields.Many2One('sale.line', 'Sale Line', readonly=True)
     current_quantity = fields.Float('Current Quantity',
-        digits=(16, Eval('unit_digits', 2)), readonly=True,
-        depends=['unit_digits'])
+        digits='uom', readonly=True)
     new_quantity = fields.Float('New Quantity',
-        digits=(16, Eval('unit_digits', 2)), required=True,
+        digits='uom', required=True,
         domain=[
             ('new_quantity', '!=', Eval('current_quantity')),
             ('new_quantity', '>', 0),
             ],
-        depends=['unit_digits', 'current_quantity'])
+        depends=['current_quantity'])
     uom = fields.Many2One('product.uom', 'Uom', readonly=True)
-    unit_digits = fields.Integer('Unit Digits', readonly=True)
 
 
 class ChangeQuantity(Wizard):
@@ -76,7 +74,6 @@ class ChangeQuantity(Wizard):
             'sale_line': production.origin.id,
             'current_quantity': production.quantity,
             'uom': production.uom.id,
-            'unit_digits': production.uom.digits,
             }
 
     def transition_modify(self):
@@ -98,6 +95,5 @@ class ChangeQuantity(Wizard):
         sale_change_quantity.start.current_quantity = sale_line.quantity
         sale_change_quantity.start.new_quantity = sale_line_new_quantity
         sale_change_quantity.start.unit = sale_line.unit
-        sale_change_quantity.start.unit_digits = sale_line.unit.digits
         sale_change_quantity.transition_modify()
         return 'end'

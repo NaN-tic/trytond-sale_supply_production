@@ -18,11 +18,7 @@ msgctxt "field:production.change_quantity.start,sale_line:"
 msgid "Sale Line"
 msgstr "Línea de venta"
 
-msgctxt "field:production.change_quantity.start,unit_digits:"
-msgid "Unit Digits"
-msgstr "Decimales de la unidad"
-
-msgctxt "field:production.change_quantity.start,uom:"
+amsgctxt "field:production.change_quantity.start,uom:"
 msgid "Uom"
 msgstr "UdM"
 
