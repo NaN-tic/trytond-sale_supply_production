@@ -76,6 +76,7 @@ class SaleLine(metaclass=PoolMeta):
             self.supply_production = self.product.producible
 
     def create_productions(self):
+        Date = Pool().get('ir.date')
         if (self.type != 'line'
                 or not self.product
                 or not self.product.template.producible
@@ -116,8 +117,12 @@ class SaleLine(metaclass=PoolMeta):
                     production.operations = []
                     production.on_change_route()
 
+                production.planned_start_date = (
+                    production.on_change_with_planned_start_date() or
+                    Date.today())
                 production.save()
                 productions.append(production)
+
         return productions
 
     def get_production(self, values):
