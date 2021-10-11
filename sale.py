@@ -117,9 +117,10 @@ class SaleLine(metaclass=PoolMeta):
                     production.operations = []
                     production.on_change_route()
 
-                production.planned_start_date = (
-                    production.on_change_with_planned_start_date() or
-                    Date.today())
+                production.planned_start_date = (Date.today() +
+                    production.compute_lead_time())
+                production.planned_date = (Date.today() +
+                    production.compute_lead_time())
                 production.save()
                 productions.append(production)
 
