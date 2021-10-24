@@ -16,7 +16,6 @@ MODULE2PREFIX = {
     'product_cost_plan_margin': 'nantic',
     'product_cost_plan_operation': 'nantic',
     'product_cost_plan_process': 'nantic',
-    'production_external_party': 'nantic',
     'production_quality_control': 'nantic',
     }
 
