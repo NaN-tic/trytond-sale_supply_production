@@ -97,8 +97,8 @@ Create product::
 
 Create Components::
 
-    >>> meter, = ProductUom.find([('name', '=', 'Meter')])
-    >>> centimeter, = ProductUom.find([('name', '=', 'centimeter')])
+    >>> meter, = ProductUom.find([('symbol', '=', 'm')])
+    >>> centimeter, = ProductUom.find([('symbol', '=', 'cm')])
     >>> templateA = ProductTemplate()
     >>> templateA.name = 'component A'
     >>> templateA.default_uom = meter
