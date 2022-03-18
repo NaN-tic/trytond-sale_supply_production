@@ -22,8 +22,8 @@ class Sale(metaclass=PoolMeta):
             warning_lines = False
             for line in sale.lines:
                 if (line.type == 'line' and line.product
-                        and not getattr(line.product, 'purchasable', False)
-                        and hasattr(line, 'cost_plan') and not line.cost_plan):
+                        and getattr(line.product, 'producible', False)
+                            and hasattr(line, 'cost_plan') and not line.cost_plan):
                     warning_lines = True
                     break
             key = 'missing_cost_plan_%s' % sale.id
