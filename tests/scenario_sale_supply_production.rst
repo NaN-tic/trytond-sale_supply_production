@@ -279,6 +279,7 @@ Warn if a line has no cost plan::
     >>> sale_line.product = product_s
     >>> sale_line.quantity = 1.0
     >>> sale_line.supply_production = False
+    >>> sale_line.cost_plan = None
     >>> sale.save()
     >>> sale.click('quote')
     >>> sale.click('confirm') # doctest: +IGNORE_EXCEPTION_DETAIL
