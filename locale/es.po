@@ -18,7 +18,7 @@ msgctxt "field:production.change_quantity.start,sale_line:"
 msgid "Sale Line"
 msgstr "Línea de venta"
 
-amsgctxt "field:production.change_quantity.start,uom:"
+msgctxt "field:production.change_quantity.start,uom:"
 msgid "Uom"
 msgstr "UdM"
 
