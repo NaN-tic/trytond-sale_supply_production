@@ -19,7 +19,8 @@ this repository contains the full copyright notices and license terms. -->
           <field name="text">You cannot modify the quantity of Production "%(production)s" because it is not in state "Draft" or "Waiting".</field>
       </record>
       <record model="ir.message" id="production_no_related_to_sale">
-          <field name="text">The Production "%(production)s" is not related to any sale.\n In this case, you can\'t use this wizard but you can modify the quantity directly in production\'s form.</field>
+          <field name="text">The Production "%(production)s" is not related to any sale.
+In this case, you can't use this wizard but you can modify the quantity directly in production's form.</field>
       </record>
       <record model="ir.message" id="production_with_same_origin">
           <field name="text">Cannot change Sale Line quantity because there ara more than one production "%(productions)s" with same Sale line "%(sale_line)s"</field>
