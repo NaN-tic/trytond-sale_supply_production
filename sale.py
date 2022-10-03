@@ -112,6 +112,7 @@ class SaleLine(metaclass=PoolMeta):
                     production.inputs = []
                     production.outputs = []
                     production.explode_bom()
+                    production.on_change_bom()
 
                 if getattr(production, 'route', None):
                     production.operations = []
