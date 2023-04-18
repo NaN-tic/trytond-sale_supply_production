@@ -68,6 +68,11 @@ class SaleLine(metaclass=PoolMeta):
         SaleConfiguration = Pool().get('sale.configuration')
         return SaleConfiguration(1).sale_supply_production_default
 
+    @property
+    def quantity_to_production(self):
+        "Amount to check against credit limit"
+        return self.quantity
+
     @fields.depends('product')
     def on_change_product(self):
         super(SaleLine, self).on_change_product()
@@ -92,7 +97,7 @@ class SaleLine(metaclass=PoolMeta):
             production_values = {
                 'product': self.product,
                 'uom': self.unit,
-                'quantity': self.quantity,
+                'quantity': self.quantity_to_production,
                 }
             if self.product.boms:
                 product_bom = self.product.boms[0]
