@@ -85,7 +85,7 @@ class SaleLine(metaclass=PoolMeta):
         if (self.type != 'line'
                 or not self.product
                 or not self.product.template.producible
-                or self.quantity <= 0
+                or self.quantity_to_production <= 0
                 or hasattr(self, 'cost_plan') and not self.cost_plan
                 or len(self.productions) > 0):
             return []
