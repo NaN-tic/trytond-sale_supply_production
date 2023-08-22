@@ -147,7 +147,7 @@ class SaleLine(metaclass=PoolMeta):
         production.planned_date = self.shipping_date
         if hasattr(self, 'manual_delivery_date'):
             production.planned_date = self.manual_delivery_date
-        production.planned_start_date = production.on_change_with_planned_start_date()
+        production.set_planned_start_date()
 
         if (hasattr(Production, 'quality_template') and
                 production.product.template.quality_template):
@@ -170,69 +170,6 @@ class SaleLine(metaclass=PoolMeta):
         default = default.copy()
         default['productions'] = None
         return super(SaleLine, cls).copy(lines, default=default)
-
-
-class Plan:
-    __name__ = 'product.cost.plan'
-
-    def get_elegible_productions(self, unit, quantity):
-        """
-        Returns a list of dicts with the required data to create all the
-        productions required for this plan
-        """
-        if not self.bom:
-            raise UserError(gettext(
-                'sale_supply_production.cannot_create_productions_missing_bom',
-                cost_plan=self.rec_name))
-
-        prod = {
-            'product': self.product,
-            'bom': self.bom,
-            'uom': unit,
-            'quantity': quantity,
-            }
-        if hasattr(self, 'route'):
-            prod['route'] = self.route
-        if hasattr(self, 'process'):
-            prod['process'] = self.process
-
-        res = [
-            prod
-            ]
-        res.extend(self._get_chained_productions(self.product, self.bom,
-                quantity, unit))
-        return res
-
-    def _get_chained_productions(self, product, bom, quantity, unit,
-            plan_boms=None):
-        "Returns base values for chained productions"
-        pool = Pool()
-        Input = pool.get('production.bom.input')
-
-        if plan_boms is None:
-            plan_boms = {}
-            for plan_bom in self.boms:
-                if plan_bom.bom:
-                    plan_boms[plan_bom.product.id] = plan_bom
-
-        factor = bom.compute_factor(product, quantity, unit)
-        res = []
-        for input_ in bom.inputs:
-            input_product = input_.product
-            if input_product.id in plan_boms:
-                # Create production for current product
-                plan_bom = plan_boms[input_product.id]
-                prod = {
-                    'product': plan_bom.product,
-                    'bom': plan_bom.bom,
-                    'uom': input_.uom,
-                    'quantity': Input.compute_quantity(input_, factor),
-                    }
-                res.append(prod)
-                # Search for more chained productions
-                res.extend(self._get_chained_productions(input_product,
-                        plan_bom.bom, quantity, input_.uom, plan_boms))
-        return res
 
 
 class ChangeLineQuantityStart(metaclass=PoolMeta):
