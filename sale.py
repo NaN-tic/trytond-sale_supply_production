@@ -96,7 +96,7 @@ class SaleLine(metaclass=PoolMeta):
         else:
             production_values = {
                 'product': self.product,
-                'uom': self.unit,
+                'unit': self.unit,
                 'quantity': self.quantity_to_production,
                 }
             if self.product.boms:
@@ -143,7 +143,7 @@ class SaleLine(metaclass=PoolMeta):
         production.state = 'draft'
         production.product = values['product']
         production.quantity = values['quantity']
-        production.uom = values.get('uom', production.product.default_uom)
+        production.unit = values.get('uom', production.product.default_uom)
         production.planned_date = self.shipping_date
         if hasattr(self, 'manual_delivery_date'):
             production.planned_date = self.manual_delivery_date
@@ -186,7 +186,7 @@ class ChangeLineQuantityStart(metaclass=PoolMeta):
         productions = self.line.productions if self.line else []
         for production in productions:
             if production.state in ('assigned', 'running', 'done', 'cancelled'):
-                produced_quantity += Uom.compute_qty(production.uom,
+                produced_quantity += Uom.compute_qty(production.unit,
                     production.quantity, self.line.unit)
 
         return max(minimal_quantity, produced_quantity)
@@ -211,7 +211,7 @@ class ChangeLineQuantity(metaclass=PoolMeta):
 
         for production in line.productions:
             if production.state in ('assigned', 'running', 'done', 'cancelled'):
-                quantity -= Uom.compute_qty(production.uom,
+                quantity -= Uom.compute_qty(production.unit,
                     production.quantity, self.start.line.unit)
         if quantity < 0:
             raise UserError(gettext(
@@ -221,7 +221,7 @@ class ChangeLineQuantity(metaclass=PoolMeta):
             production = updateable_productions.pop(0)
             self._change_production_quantity(
                 production,
-                Uom.compute_qty(line.unit, quantity, production.uom))
+                Uom.compute_qty(line.unit, quantity, production.unit))
             production.save()
         if updateable_productions:
             Production.delete(updateable_productions)
