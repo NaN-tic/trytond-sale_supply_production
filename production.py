@@ -32,8 +32,7 @@ class ChangeQuantityStart(ModelView):
         domain=[
             ('new_quantity', '!=', Eval('current_quantity')),
             ('new_quantity', '>', 0),
-            ],
-        depends=['current_quantity'])
+            ])
     uom = fields.Many2One('product.uom', 'Uom', readonly=True)
 
 
