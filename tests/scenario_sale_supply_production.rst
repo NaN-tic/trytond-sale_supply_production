@@ -248,6 +248,7 @@ Sale product with first plan::
     >>> sale.reload()
     >>> len(sale.productions) == 1
     True
+    >>> production_ids = [p.id for p in sale.productions]
     >>> production, = sale.productions
     >>> production.product == product
     True
@@ -258,8 +259,21 @@ Sale product with first plan::
     >>> len(production.outputs)
     1
 
+  Delete a production, process the sale and create a new production::
+
+      >>> admin_user, = User.find([('login', '=', 'admin')], limit=1)
+      >>> config.user = admin_user.id
+      >>> Production = Model.get('production')
+      >>> Production.delete([production])
+      >>> sale.reload()
+      >>> len(sale.productions) == 1
+      True
+      >>> production_ids != [p.id for p in sale.productions]
+      True
+
 Warn if a line has no cost plan::
 
+    >>> config.user = sale_user.id
     >>> sale = Sale()
     >>> sale.party = customer
     >>> sale.payment_term = payment_term
