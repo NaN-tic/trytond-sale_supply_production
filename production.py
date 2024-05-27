@@ -1,5 +1,6 @@
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
+from functools import wraps
 from trytond.model import ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
@@ -8,7 +9,25 @@ from trytond.wizard import Button, StateTransition, StateView, Wizard
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
 
-__all__ = ['Production', 'ChangeQuantityStart', 'ChangeQuantity']
+def process_sale():
+    def _process_sale(func):
+        @wraps(func)
+        def wrapper(cls, productions):
+            pool = Pool()
+            Sale = pool.get('sale.sale')
+            SaleLine = Pool().get('sale.line')
+            transaction = Transaction()
+            context = transaction.context
+            with transaction.set_context(_check_access=False):
+                sales = list(set([p.origin.sale for p in productions
+                            if p.origin and isinstance(p.origin, SaleLine)]))
+            func(cls, productions)
+            if sales:
+                with transaction.set_context(
+                        queue_batch=context.get('queue_batch', True)):
+                    Sale.__queue__.process(sales)
+        return wrapper
+    return _process_sale
 
 
 class Production(metaclass=PoolMeta):
@@ -17,6 +36,11 @@ class Production(metaclass=PoolMeta):
     @classmethod
     def _get_origin(cls):
         return super()._get_origin() | {'sale.line'}
+
+    @classmethod
+    @process_sale()
+    def delete(cls, productions):
+        super().delete(productions)
 
 
 class ChangeQuantityStart(ModelView):

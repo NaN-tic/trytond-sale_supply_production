@@ -6,8 +6,6 @@ from trytond.transaction import Transaction
 from trytond.i18n import gettext
 from trytond.exceptions import UserError, UserWarning
 
-__all__ = ['Sale', 'SaleLine', 'ChangeLineQuantityStart', 'ChangeLineQuantity']
-
 
 class Sale(metaclass=PoolMeta):
     __name__ = 'sale.sale'
