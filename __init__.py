@@ -2,6 +2,7 @@
 #copyright notices and license terms.
 from trytond.pool import Pool
 from . import configuration
+from . import product
 from . import production
 from . import sale
 
@@ -9,6 +10,8 @@ from . import sale
 def register():
     Pool.register(
         configuration.Configuration,
+        product.Template,
+        product.Product,
         production.Production,
         production.ChangeQuantityStart,
         sale.Sale,
