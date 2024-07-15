@@ -1,0 +1,5 @@
+<data>
+    <xpath expr="//group[@id='checkboxes']" position="inside">
+        <field name="supply_production_on_sale"/>
+    </xpath>
+</data>

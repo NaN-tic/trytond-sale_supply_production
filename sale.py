@@ -73,10 +73,10 @@ class SaleLine(metaclass=PoolMeta):
 
     @fields.depends('product')
     def on_change_product(self):
-        super(SaleLine, self).on_change_product()
+        super().on_change_product()
 
         if self.product:
-            self.supply_production = self.product.producible
+            self.supply_production = self.product.supply_production_on_sale
 
     def create_productions(self):
         if (self.type != 'line'
