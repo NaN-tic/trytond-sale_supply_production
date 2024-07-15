@@ -1,9 +1,8 @@
-from trytond.exceptions import UserWarning
 from trytond.tests.tools import activate_modules
 from trytond.modules.account_invoice.tests.tools import set_fiscalyear_invoice_sequences, create_payment_term
 from trytond.modules.account.tests.tools import create_fiscalyear, create_chart, get_accounts
 from trytond.modules.company.tests.tools import create_company, get_company
-from proteus import Model
+from proteus import Model, Wizard
 from decimal import Decimal
 import unittest
 from trytond.tests.test_tryton import drop_db
@@ -19,22 +18,11 @@ class Test(unittest.TestCase):
         super().tearDown()
 
     def test(self):
-        # Install product_cost_plan Module::
-        config = activate_modules(['sale_supply_production', 'sale_cost_plan'])
+        activate_modules(['sale_supply_production', 'sale_change_quantity'])
 
         # Create company::
         _ = create_company()
         company = get_company()
-
-        # Create sale user::
-        User = Model.get('res.user')
-        Group = Model.get('res.group')
-        sale_user = User()
-        sale_user.name = 'Sale'
-        sale_user.login = 'sale'
-        sale_group, = Group.find([('name', '=', 'Sales')])
-        sale_user.groups.append(sale_group)
-        sale_user.save()
 
         # Create fiscal year::
         fiscalyear = set_fiscalyear_invoice_sequences(
@@ -58,7 +46,7 @@ class Test(unittest.TestCase):
         payment_term = create_payment_term()
         payment_term.save()
 
-        # Configuration production location::
+        # Configure production location::
         Location = Model.get('stock.location')
         warehouse, = Location.find([('code', '=', 'WH')])
         production_location, = Location.find([('code', '=', 'PROD')])
@@ -85,32 +73,18 @@ class Test(unittest.TestCase):
         template.supply_production_on_sale = True
         template.salable = True
         template.list_price = Decimal(30)
-        template.cost_price_method = 'fixed'
         template.account_category = account_category
         template.save()
         product, = template.products
         product.cost_price = Decimal(20)
+        product.cost_price_method = 'fixed'
         product.save()
-        template_s = ProductTemplate()
-        template_s.name = 'product'
-        template_s.default_uom = unit
-        template_s.type = 'goods'
-        template_s.producible = True
-        template_s.salable = True
-        template_s.list_price = Decimal(30)
-        template_s.cost_price_method = 'fixed'
-        template_s.account_category = account_category
-        template_s.save()
-        product_s, = template_s.products
-        product_s.cost_price = Decimal(20)
-        product_s.save()
 
         # Create Components::
         meter, = ProductUom.find([('symbol', '=', 'm')])
         centimeter, = ProductUom.find([('symbol', '=', 'cm')])
         templateA = ProductTemplate()
         templateA.name = 'component A'
-        templateA.producible = True
         templateA.default_uom = meter
         templateA.type = 'goods'
         templateA.list_price = Decimal(2)
@@ -120,7 +94,6 @@ class Test(unittest.TestCase):
         componentA.save()
         templateB = ProductTemplate()
         templateB.name = 'component B'
-        templateB.producible = True
         templateB.default_uom = meter
         templateB.type = 'goods'
         templateB.list_price = Decimal(2)
@@ -130,20 +103,20 @@ class Test(unittest.TestCase):
         componentB.save()
         template1 = ProductTemplate()
         template1.name = 'component 1'
-        template1.producible = True
         template1.default_uom = unit
         template1.type = 'goods'
         template1.list_price = Decimal(5)
+        template1.producible = True
         template1.save()
         component1, = template1.products
         component1.cost_price = Decimal(2)
         component1.save()
         template2 = ProductTemplate()
         template2.name = 'component 2'
-        template2.producible = True
         template2.default_uom = meter
         template2.type = 'goods'
         template2.list_price = Decimal(7)
+        template2.cost_price = Decimal(5)
         template2.save()
         component2, = template2.products
         component2.cost_price = Decimal(5)
@@ -189,17 +162,7 @@ class Test(unittest.TestCase):
         product.boms.append(ProductBom(bom=bom))
         product.save()
 
-        # Create a cost plan for product (without child boms)::
-        CostPlan = Model.get('product.cost.plan')
-        plan = CostPlan()
-        plan.product = product
-        plan.quantity = 1
-        plan.save()
-        CostPlan.compute([plan.id], config.context)
-        plan.reload()
-
-        # Sale product with first plan::
-        config.user = sale_user.id
+        # Sale product::
         Sale = Model.get('sale.sale')
         SaleLine = Model.get('sale.line')
         sale = Sale()
@@ -209,53 +172,25 @@ class Test(unittest.TestCase):
         sale_line = SaleLine()
         sale.lines.append(sale_line)
         sale_line.product = product
-        sale_line.cost_plan = plan
         sale_line.quantity = 2.0
-        sale.save()
         sale.click('quote')
         sale.click('confirm')
         self.assertEqual(sale.state, 'processing')
-        sale.reload()
-        self.assertEqual(len(sale.productions), 1)
-        production_ids = [p.id for p in sale.productions]
+        sale_line, = sale.lines
         production, = sale.productions
         self.assertEqual(production.product, product)
         self.assertEqual(production.quantity, 2.0)
         self.assertEqual(len(production.inputs), 2)
         self.assertEqual(len(production.outputs), 1)
 
-        # Delete a production, process the sale and create a new production::
-        admin_user, = User.find([('login', '=', 'admin')], limit=1)
-        config.user = admin_user.id
-        Production = Model.get('production')
-        Production.delete([production])
+        # Increase quantity and check production is updated::
+        change = Wizard('sale.change_line_quantity', [sale])
+        change.form.line = sale_line
+        change.form.new_quantity = 4.0
+        change.execute('modify')
         sale.reload()
-        self.assertEqual(len(sale.productions), 1)
-        self.assertNotEqual(production_ids, [p.id for p in sale.productions])
-
-        # Warn if a line has no cost plan::
-        config.user = sale_user.id
-        sale = Sale()
-        sale.party = customer
-        sale.payment_term = payment_term
-        sale.invoice_method = 'order'
-        sale_line = SaleLine()
-        sale.lines.append(sale_line)
-        sale_line.product = product
-        sale_line.cost_plan = plan
-        sale_line.quantity = 2.0
-        sale_line = SaleLine()
-        sale.lines.append(sale_line)
-        sale_line.product = product
-        sale_line.quantity = 1.0
-        sale_line.supply_production = False
-        sale_line = SaleLine()
-        sale.lines.append(sale_line)
-        sale_line.product = product_s
-        sale_line.quantity = 1.0
-        sale_line.supply_production = False
-        sale_line.cost_plan = None
-        sale.save()
-        sale.click('quote')
-        with self.assertRaises(UserWarning):
-            sale.click('confirm')
+        sale_line, = sale.lines
+        self.assertEqual(sale_line.confirmed_quantity, 2.0)
+        self.assertEqual(sale_line.quantity, 4.0)
+        production, = sale.productions
+        self.assertEqual(production.quantity, 4.0)
