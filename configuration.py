@@ -7,7 +7,3 @@ class Configuration(metaclass=PoolMeta):
     sale_supply_production_default = fields.Boolean(
         'Sale Line Supply Production',
         help='Default Supply Production value for Sale Lines')
-
-    @staticmethod
-    def default_sale_supply_production_default():
-        return True
