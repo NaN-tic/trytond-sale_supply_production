@@ -97,7 +97,7 @@ class SaleLine(metaclass=PoolMeta):
                 'quantity': self.quantity_to_production,
                 }
             if self.product.boms:
-                product_bom = self.product.boms[0]
+                product_bom = self.product.get_bom()
                 production_values.update({'bom': product_bom.bom})
                 if getattr(product_bom, 'route', None):
                     production_values.update({'route': product_bom.route})
