@@ -84,7 +84,7 @@ class ChangeQuantity(Wizard):
                 production=production.rec_name))
         if not isinstance(production.origin, SaleLine):
             raise UserError(gettext(
-                'sale_supply_production._no_related_to_sale'))
+                'sale_supply_production.production_no_related_to_sale'))
 
         productions = Production.search(['origin','=', str(production.origin)])
         if len(productions) != 1:
