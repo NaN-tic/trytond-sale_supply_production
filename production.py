@@ -96,7 +96,7 @@ class ChangeQuantity(Wizard):
             'production': production.id,
             'sale_line': production.origin.id,
             'current_quantity': production.quantity,
-            'uom': production.uom.id,
+            'uom': production.unit.id,
             }
 
     def transition_modify(self):
