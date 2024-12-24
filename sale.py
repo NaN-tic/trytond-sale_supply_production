@@ -1,6 +1,7 @@
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
 from trytond.model import fields
+from trytond.pyson import Eval
 from trytond.pool import PoolMeta, Pool
 from trytond.transaction import Transaction
 from trytond.i18n import gettext
@@ -58,8 +59,12 @@ class Sale(metaclass=PoolMeta):
 
 class SaleLine(metaclass=PoolMeta):
     __name__ = 'sale.line'
-    supply_production = fields.Boolean('Supply Production')
-    productions = fields.One2Many('production', 'origin', 'Productions')
+    supply_production = fields.Boolean('Supply Production',
+        states={
+            'readonly': Eval('sale_state') != 'draft',
+            })
+    productions = fields.One2Many('production', 'origin', 'Productions',
+        readonly=True)
 
     @staticmethod
     def default_supply_production():
