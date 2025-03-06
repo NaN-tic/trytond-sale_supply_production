@@ -1,11 +1,11 @@
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
-from trytond.model import fields
-from trytond.pyson import Eval
-from trytond.pool import PoolMeta, Pool
-from trytond.transaction import Transaction
-from trytond.i18n import gettext
 from trytond.exceptions import UserError, UserWarning
+from trytond.i18n import gettext
+from trytond.model import fields
+from trytond.pool import Pool, PoolMeta
+from trytond.pyson import Eval
+from trytond.transaction import Transaction
 
 
 class Sale(metaclass=PoolMeta):
@@ -145,7 +145,7 @@ class SaleLine(metaclass=PoolMeta):
         production.state = 'draft'
         production.product = values['product']
         production.quantity = values['quantity']
-        production.unit = values.get('uom', production.product.default_uom)
+        production.unit = values.get('unit', production.product.default_uom)
         production.planned_date = self.shipping_date
         if hasattr(self, 'manual_delivery_date'):
             production.planned_date = self.manual_delivery_date
