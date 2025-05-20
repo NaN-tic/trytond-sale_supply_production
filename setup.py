@@ -9,15 +9,7 @@ from configparser import ConfigParser
 
 MODULE = 'sale_supply_production'
 PREFIX = 'nantic'
-MODULE2PREFIX = {
-    'sale_change_quantity': 'nantic',
-    'sale_cost_plan': 'nantic',
-    'sale_discount': 'trytonspain',
-    'product_cost_plan_margin': 'nantic',
-    'product_cost_plan_operation': 'nantic',
-    'product_cost_plan_process': 'nantic',
-    'production_quality_control': 'nantic',
-    }
+MODULE2PREFIX = {}
 
 
 def read(fname):
@@ -48,7 +40,7 @@ major_version = int(major_version)
 minor_version = int(minor_version)
 
 requires = []
-for dep in info.get('depends', []) + ['sale_change_quantity']:
+for dep in info.get('depends', []):
     if not re.match(r'(ir|res)(\W|$)', dep):
         prefix = MODULE2PREFIX.get(dep, 'trytond')
         requires.append(get_require_version('%s_%s' % (prefix, dep)))
@@ -56,7 +48,6 @@ requires.append(get_require_version('trytond'))
 
 tests_require = [
     get_require_version('proteus'),
-    get_require_version('nantic-sale_change_quantity')
 ]
 
 series = '%s.%s' % (major_version, minor_version)
@@ -65,14 +56,7 @@ if minor_version % 2:
 else:
     branch = series
 
-dependency_links = [
-    ('hg+https://bitbucket.org/nantic/'
-        'trytond-sale_change_quantity@%(branch)s'
-        '#egg=nantic-sale_change_quantity-%(series)s' % {
-            'branch': branch,
-            'series': series,
-            }),
-    ]
+dependency_links = []
 
 if minor_version % 2:
     # Add development index for testing with proteus
