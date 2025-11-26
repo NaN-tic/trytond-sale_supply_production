@@ -35,5 +35,5 @@ class Template(metaclass=PoolMeta):
 class Product(metaclass=PoolMeta):
     __name__ = 'product.product'
 
-    def get_bom(self):
+    def get_bom(self, pattern=None):
         return self.boms and self.boms[0]
