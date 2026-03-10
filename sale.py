@@ -106,6 +106,8 @@ class SaleLine(metaclass=PoolMeta):
                 production_values.update({'bom': product_bom.bom})
                 if getattr(product_bom, 'route', None):
                     production_values.update({'route': product_bom.route})
+                if getattr(product_bom, 'routing', None):
+                    production_values.update({'routing': product_bom.routing})
                 if getattr(product_bom, 'process', None):
                     production_values.update({'process': product_bom.process})
             productions_values = [production_values]
@@ -133,6 +135,7 @@ class SaleLine(metaclass=PoolMeta):
     def get_production(self, values):
         pool = Pool()
         Production = pool.get('production')
+        SaleConfiguration = pool.get('sale.configuration')
 
         production = Production()
         production.company = self.sale.company
@@ -151,6 +154,8 @@ class SaleLine(metaclass=PoolMeta):
             production.planned_date = self.manual_delivery_date
         production.set_planned_start_date()
 
+        config = SaleConfiguration(1)
+
         if (hasattr(Production, 'quality_template') and
                 production.product.template.quality_template):
             production.quality_template = production.product.template.quality_template
@@ -160,6 +165,11 @@ class SaleLine(metaclass=PoolMeta):
 
         if 'route' in values:
             production.route = values['route']
+
+        if 'routing' in values:
+            production.routing = values['routing']
+            if hasattr(config, 'default_work_center') and config.default_work_center:
+                production.work_center = config.default_work_center
 
         if 'bom' in values:
             production.bom = values['bom']

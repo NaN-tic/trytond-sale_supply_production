@@ -10,4 +10,12 @@ this repository contains the full copyright notices and license terms. -->
             <field name="name">configuration_form</field>
         </record>
     </data>
+    <data depends="production_work">
+        <record model="ir.ui.view"
+            id="sale_supply_production_work_configuration_view_form">
+            <field name="model">sale.configuration</field>
+            <field name="inherit" ref="sale.sale_configuration_view_form"/>
+            <field name="name">configuration_form_production_work</field>
+        </record>
+    </data>
 </tryton>
