@@ -27,7 +27,7 @@ msgstr "Quantitat actual"
 
 msgctxt "field:production.change_quantity.start,new_quantity:"
 msgid "New Quantity"
-msgstr "Noca quantitat"
+msgstr "Nova quantitat"
 
 msgctxt "field:production.change_quantity.start,production:"
 msgid "Production"
@@ -35,15 +35,27 @@ msgstr "Producció"
 
 msgctxt "field:production.change_quantity.start,sale_line:"
 msgid "Sale Line"
-msgstr "Línia de venta"
+msgstr "Línia de venda"
 
 msgctxt "field:production.change_quantity.start,uom:"
 msgid "Uom"
 msgstr "UdM"
 
+msgctxt "field:sale.configuration,default_work_center:"
+msgid "Default Work Center"
+msgstr "Centre de treball per defecte"
+
 msgctxt "field:sale.configuration,sale_supply_production_default:"
 msgid "Sale Line Supply Production"
 msgstr "Producció de subministrament de línia de venda"
+
+msgctxt "field:sale.configuration.default_work_center,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:sale.configuration.default_work_center,default_work_center:"
+msgid "Default Work Center"
+msgstr "Centre de treball per defecte"
 
 msgctxt "field:sale.line,productions:"
 msgid "Productions"
@@ -57,10 +69,22 @@ msgctxt "field:sale.sale,productions:"
 msgid "Productions"
 msgstr "Produccions"
 
+msgctxt "help:sale.configuration,default_work_center:"
+msgid "Default Work Center for the Productions created from Sales"
+msgstr ""
+"Centre de treball per defecte per les produccions creades a partir de les "
+"vendes."
+
 msgctxt "help:sale.configuration,sale_supply_production_default:"
 msgid "Default Supply Production value for Sale Lines"
 msgstr ""
 "Valor de producció de subministrament per defecte per a les línies de venda"
+
+msgctxt "help:sale.configuration.default_work_center,default_work_center:"
+msgid "Default Work Center for the Productions created from Sales"
+msgstr ""
+"Centre de treball per defecte per les produccions creades a partir de les "
+"vendes."
 
 msgctxt "model:ir.action,name:act_production_form"
 msgid "Productions"
@@ -105,12 +129,10 @@ msgstr "No hi ha cap producció actualitzable disponible."
 msgctxt "model:ir.message,text:production_no_related_to_sale"
 msgid ""
 "The Production \"%(production)s\" is not related to any sale.\n"
-"In this case, you can't use this wizard but you can modify the quantity direct"
-"ly in production's form."
+"In this case, you can't use this wizard but you can modify the quantity directly in production's form."
 msgstr ""
 "La producció \"%(production)s\" no està relacionada amb cap venda.\n"
-"En aquest cas, no podeu utilitzar aquest assistent, però podeu modificar la qu"
-"antitat directament al formulari de producció."
+"En aquest cas, no podeu utilitzar aquest assistent, però podeu modificar la quantitat directament al formulari de producció."
 
 #, python-format
 msgctxt "model:ir.message,text:production_with_same_origin"
@@ -129,6 +151,10 @@ msgctxt "model:production.change_quantity.start,string:"
 msgid "Production Change Quantity Start"
 msgstr "Inici de la quantitat de canvi de producció"
 
+msgctxt "model:sale.configuration.default_work_center,string:"
+msgid "Sale Configuration Default Work Center"
+msgstr "Centre de treball per defecte de configuració de vendes"
+
 msgctxt "view:production.change_quantity.start:"
 msgid ""
 "It will change the quantity of the origin sale line which has been confirmed"
@@ -141,11 +167,3 @@ msgstr ""
 msgctxt "view:sale.sale:"
 msgid "Productions"
 msgstr "Produccions"
-
-msgctxt "wizard_button:production.change_quantity,start,end:"
-msgid "Cancel"
-msgstr "Cancel·la"
-
-msgctxt "wizard_button:production.change_quantity,start,modify:"
-msgid "Modify"
-msgstr "Modificar"

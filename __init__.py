@@ -29,3 +29,8 @@ def register():
         sale.ChangeLineQuantity,
         depends=['sale_change_quantity'],
         module='sale_supply_production', type_='wizard')
+    Pool.register(
+        configuration.ConfigurationProductionWork,
+        configuration.ConfigurationDefaultWorkCenter,
+        depends=['production_work'],
+        module='sale_supply_production', type_='model')
