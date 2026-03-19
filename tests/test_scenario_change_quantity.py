@@ -18,7 +18,8 @@ class Test(unittest.TestCase):
         super().tearDown()
 
     def test(self):
-        activate_modules(['sale_supply_production', 'sale_change_quantity'])
+        activate_modules(['sale_supply_production', 'sale_change_quantity',
+            'production_work'])
 
         # Create company::
         _ = create_company()
