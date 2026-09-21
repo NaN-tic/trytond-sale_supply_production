@@ -2,7 +2,7 @@
 # copyright notices and license terms.
 from trytond.exceptions import UserError, UserWarning
 from trytond.i18n import gettext
-from trytond.model import fields
+from trytond.model import ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
@@ -33,6 +33,7 @@ class Sale(metaclass=PoolMeta):
         super(Sale, cls).confirm(sales)
 
     @classmethod
+    @ModelView.button
     def process(cls, sales):
         for sale in sales:
             if sale.state in ('done', 'cancelled'):
