@@ -94,15 +94,6 @@ msgid "Change Sale Quantity"
 msgstr "Cambiar la cantidad de venta"
 
 #, python-format
-msgctxt "model:ir.message,text:cannot_create_productions_missing_bom"
-msgid ""
-"No production can be created because Product Cost Plan \"%(cost_plan)s\" has"
-" no BOM assigned."
-msgstr ""
-"No se puede crear la producción porque el plan de costes del producto "
-"\"%(cost_plan)s\" no tiene una lista de materiales asignada."
-
-#, python-format
 msgctxt "model:ir.message,text:invalid_production_state"
 msgid ""
 "You cannot modify the quantity of Production \"%(production)s\" because it "
@@ -110,15 +101,6 @@ msgid ""
 msgstr ""
 "No puede modificar la cantidad de la producción \"%(production)s\" porque no"
 " está en estado \"Borrador\" o \"En espera\"."
-
-#, python-format
-msgctxt "model:ir.message,text:missing_cost_plan"
-msgid ""
-"There are some lines of sale \"%(sale)s\" does not have Cost Plan, so it "
-"will not generate any production."
-msgstr ""
-"Hay algunas líneas de la venta \"%(sale)s\" no tiene un plan de costes, por "
-"lo que no generará ninguna producción."
 
 msgctxt "model:ir.message,text:no_updateable_productions"
 msgid "There is no updateable production available!"
