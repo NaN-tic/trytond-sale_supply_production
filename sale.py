@@ -14,6 +14,7 @@ class Sale(metaclass=PoolMeta):
         'Productions'), 'get_productions')
 
     @classmethod
+    @ModelView.button
     def confirm(cls, sales):
         Warning = Pool().get('res.user.warning')
 
