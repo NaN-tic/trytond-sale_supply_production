@@ -1,0 +1,138 @@
+#
+msgid ""
+msgstr ""
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "field:product.product,supply_production_on_sale:"
+msgid "Supply Production On Sale"
+msgstr "销售触发生产供应"
+
+msgctxt "field:product.template,supply_production_on_sale:"
+msgid "Supply Production On Sale"
+msgstr "销售触发生产供应"
+
+msgctxt "field:production.change_quantity.start,current_quantity:"
+msgid "Current Quantity"
+msgstr "当前数量"
+
+msgctxt "field:production.change_quantity.start,new_quantity:"
+msgid "New Quantity"
+msgstr "新数量"
+
+msgctxt "field:production.change_quantity.start,production:"
+msgid "Production"
+msgstr "生产"
+
+msgctxt "field:production.change_quantity.start,sale_line:"
+msgid "Sale Line"
+msgstr "销售明细"
+
+msgctxt "field:production.change_quantity.start,uom:"
+msgid "Uom"
+msgstr "计量单位"
+
+msgctxt "field:sale.configuration,default_work_center:"
+msgid "Default Work Center"
+msgstr "默认工作中心"
+
+msgctxt "field:sale.configuration,sale_supply_production_default:"
+msgid "Sale Line Supply Production"
+msgstr "销售明细生产供应"
+
+msgctxt "field:sale.configuration.default_work_center,company:"
+msgid "Company"
+msgstr "公司"
+
+msgctxt "field:sale.configuration.default_work_center,default_work_center:"
+msgid "Default Work Center"
+msgstr "默认工作中心"
+
+msgctxt "field:sale.line,productions:"
+msgid "Productions"
+msgstr "生产单"
+
+msgctxt "field:sale.line,supply_production:"
+msgid "Supply Production"
+msgstr "生产供应"
+
+msgctxt "field:sale.sale,productions:"
+msgid "Productions"
+msgstr "生产单"
+
+msgctxt "help:sale.configuration,default_work_center:"
+msgid "Default Work Center for the Productions created from Sales"
+msgstr "由销售单创建的生产单的默认工作中心"
+
+msgctxt "help:sale.configuration,sale_supply_production_default:"
+msgid "Default Supply Production value for Sale Lines"
+msgstr "销售明细的默认生产供应值"
+
+msgctxt "help:sale.configuration.default_work_center,default_work_center:"
+msgid "Default Work Center for the Productions created from Sales"
+msgstr "由销售单创建的生产单的默认工作中心"
+
+msgctxt "model:ir.action,name:act_production_form"
+msgid "Productions"
+msgstr "生产单"
+
+msgctxt "model:ir.action,name:wizard_production_change_quantity"
+msgid "Change Sale Quantity"
+msgstr "更改销售数量"
+
+#, python-format
+msgctxt "model:ir.message,text:invalid_production_state"
+msgid ""
+"You cannot modify the quantity of Production \"%(production)s\" because it "
+"is not in state \"Draft\" or \"Waiting\"."
+msgstr "无法修改生产“%(production)s”的数量，因为其状态不是“草稿”或“等待”。"
+
+msgctxt "model:ir.message,text:no_updateable_productions"
+msgid "There is no updateable production available!"
+msgstr "没有可更新的生产单！"
+
+#, python-format
+msgctxt "model:ir.message,text:production_no_related_to_sale"
+msgid ""
+"The Production \"%(production)s\" is not related to any sale.\n"
+"In this case, you can't use this wizard but you can modify the quantity directly in production's form."
+msgstr ""
+"生产“%(production)s”未关联任何销售单。\n"
+"在这种情况下，不能使用此向导，但可直接在生产表单中修改数量。"
+
+#, python-format
+msgctxt "model:ir.message,text:production_with_same_origin"
+msgid ""
+"Cannot change Sale Line quantity because there ara more than one production "
+"\"%(productions)s\" with same Sale line \"%(sale_line)s\""
+msgstr "无法更改销售明细数量，因为多个生产单“%(productions)s”关联了同一销售明细“%(sale_line)s”"
+
+msgctxt "model:ir.message,text:quantity_already_produced"
+msgid "Quantity already produced!"
+msgstr "该数量已生产！"
+
+msgctxt "model:production.change_quantity.start,string:"
+msgid "Production Change Quantity Start"
+msgstr "更改生产数量：开始"
+
+msgctxt "model:sale.configuration.default_work_center,string:"
+msgid "Sale Configuration Default Work Center"
+msgstr "销售默认工作中心配置"
+
+msgctxt "view:production.change_quantity.start:"
+msgid ""
+"It will change the quantity of the origin sale line which has been confirmed"
+" by the customer. The original one will be mantained in the Confirmed "
+"Quantity field."
+msgstr "此操作将更改客户已确认的来源销售明细数量。原始数量将保留在“已确认数量”字段中。"
+
+msgctxt "view:sale.sale:"
+msgid "Productions"
+msgstr "生产单"
+
+msgctxt "model:production.change_quantity.start,name:"
+msgid "Change Production Quantity - Start"
+msgstr "更改生产数量 - 开始"
