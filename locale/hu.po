@@ -1,0 +1,147 @@
+#
+msgid ""
+msgstr ""
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "field:product.product,supply_production_on_sale:"
+msgid "Supply Production On Sale"
+msgstr "Értékesítés alapján gyártási ellátás"
+
+msgctxt "field:product.template,supply_production_on_sale:"
+msgid "Supply Production On Sale"
+msgstr "Értékesítés alapján gyártási ellátás"
+
+msgctxt "field:production.change_quantity.start,current_quantity:"
+msgid "Current Quantity"
+msgstr "Aktuális mennyiség"
+
+msgctxt "field:production.change_quantity.start,new_quantity:"
+msgid "New Quantity"
+msgstr "Új mennyiség"
+
+msgctxt "field:production.change_quantity.start,production:"
+msgid "Production"
+msgstr "gyártás"
+
+msgctxt "field:production.change_quantity.start,sale_line:"
+msgid "Sale Line"
+msgstr "Vevői rendelés sora"
+
+msgctxt "field:production.change_quantity.start,uom:"
+msgid "Uom"
+msgstr "Mértékegység"
+
+msgctxt "field:sale.configuration,default_work_center:"
+msgid "Default Work Center"
+msgstr "Alapértelmezett munkaközpont"
+
+msgctxt "field:sale.configuration,sale_supply_production_default:"
+msgid "Sale Line Supply Production"
+msgstr "Értékesítési tétel gyártási ellátása"
+
+msgctxt "field:sale.configuration.default_work_center,company:"
+msgid "Company"
+msgstr "Cég"
+
+msgctxt "field:sale.configuration.default_work_center,default_work_center:"
+msgid "Default Work Center"
+msgstr "Alapértelmezett munkaközpont"
+
+msgctxt "field:sale.line,productions:"
+msgid "Productions"
+msgstr "Gyártások"
+
+msgctxt "field:sale.line,supply_production:"
+msgid "Supply Production"
+msgstr "Gyártási ellátás"
+
+msgctxt "field:sale.sale,productions:"
+msgid "Productions"
+msgstr "Gyártások"
+
+msgctxt "help:sale.configuration,default_work_center:"
+msgid "Default Work Center for the Productions created from Sales"
+msgstr ""
+"Az értékesítésekből létrehozott gyártások alapértelmezett munkaközpontja"
+
+msgctxt "help:sale.configuration,sale_supply_production_default:"
+msgid "Default Supply Production value for Sale Lines"
+msgstr "Az értékesítési tételek alapértelmezett gyártási ellátási értéke"
+
+msgctxt "help:sale.configuration.default_work_center,default_work_center:"
+msgid "Default Work Center for the Productions created from Sales"
+msgstr ""
+"Az értékesítésekből létrehozott gyártások alapértelmezett munkaközpontja"
+
+msgctxt "model:ir.action,name:act_production_form"
+msgid "Productions"
+msgstr "Gyártások"
+
+msgctxt "model:ir.action,name:wizard_production_change_quantity"
+msgid "Change Sale Quantity"
+msgstr "Értékesítési mennyiség módosítása"
+
+#, python-format
+msgctxt "model:ir.message,text:invalid_production_state"
+msgid ""
+"You cannot modify the quantity of Production \"%(production)s\" because it "
+"is not in state \"Draft\" or \"Waiting\"."
+msgstr ""
+"A(z) „%(production)s” gyártás mennyisége nem módosítható, mert nincs "
+"„Piszkozat” vagy „Várakozás” állapotban."
+
+msgctxt "model:ir.message,text:no_updateable_productions"
+msgid "There is no updateable production available!"
+msgstr "Nincs frissíthető gyártás!"
+
+#, python-format
+msgctxt "model:ir.message,text:production_no_related_to_sale"
+msgid ""
+"The Production \"%(production)s\" is not related to any sale.\n"
+"In this case, you can't use this wizard but you can modify the quantity directly in production's form."
+msgstr ""
+"A(z) „%(production)s” gyártás nem kapcsolódik értékesítéshez.\n"
+"Ebben az esetben a varázsló nem használható, de a mennyiség közvetlenül módosítható a gyártási űrlapon."
+
+#, python-format
+msgctxt "model:ir.message,text:production_with_same_origin"
+msgid ""
+"Cannot change Sale Line quantity because there ara more than one production "
+"\"%(productions)s\" with same Sale line \"%(sale_line)s\""
+msgstr ""
+"Az értékesítési tétel mennyisége nem módosítható, mert több gyártás "
+"(„%(productions)s”) kapcsolódik ugyanahhoz a(z) „%(sale_line)s” értékesítési"
+" tételhez"
+
+msgctxt "model:ir.message,text:quantity_already_produced"
+msgid "Quantity already produced!"
+msgstr "A mennyiség már le lett gyártva!"
+
+msgctxt "model:production.change_quantity.start,string:"
+msgid "Production Change Quantity Start"
+msgstr "Gyártási mennyiség módosítása – Kezdés"
+
+msgctxt "model:sale.configuration.default_work_center,string:"
+msgid "Sale Configuration Default Work Center"
+msgstr "Értékesítési alapértelmezett munkaközpont beállítása"
+
+msgctxt "view:production.change_quantity.start:"
+msgid ""
+"It will change the quantity of the origin sale line which has been confirmed"
+" by the customer. The original one will be mantained in the Confirmed "
+"Quantity field."
+msgstr ""
+"Ez módosítja a vevő által jóváhagyott eredeti értékesítési tétel "
+"mennyiségét. Az eredeti érték a Jóváhagyott mennyiség mezőben marad meg."
+
+msgctxt "view:sale.sale:"
+msgid "Productions"
+msgstr "Gyártások"
+
+msgctxt "model:production.change_quantity.start,name:"
+msgid "Change Production Quantity - Start"
+msgstr "Gyártási mennyiség módosítása – Kezdés"
