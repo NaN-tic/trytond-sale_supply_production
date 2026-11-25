@@ -1,0 +1,144 @@
+#
+msgid ""
+msgstr ""
+"Language: km\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "field:product.product,supply_production_on_sale:"
+msgid "Supply Production On Sale"
+msgstr "ផ្គត់ផ្គង់តាមផលិតកម្មពេលលក់"
+
+msgctxt "field:product.template,supply_production_on_sale:"
+msgid "Supply Production On Sale"
+msgstr "ផ្គត់ផ្គង់តាមផលិតកម្មពេលលក់"
+
+msgctxt "field:production.change_quantity.start,current_quantity:"
+msgid "Current Quantity"
+msgstr "បរិមាណបច្ចុប្បន្ន"
+
+msgctxt "field:production.change_quantity.start,new_quantity:"
+msgid "New Quantity"
+msgstr "បរិមាណថ្មី"
+
+msgctxt "field:production.change_quantity.start,production:"
+msgid "Production"
+msgstr "ផលិតកម្ម"
+
+msgctxt "field:production.change_quantity.start,sale_line:"
+msgid "Sale Line"
+msgstr "បន្ទាត់ការលក់"
+
+msgctxt "field:production.change_quantity.start,uom:"
+msgid "Uom"
+msgstr "ឯកតារង្វាស់"
+
+msgctxt "field:sale.configuration,default_work_center:"
+msgid "Default Work Center"
+msgstr "មជ្ឈមណ្ឌលការងារលំនាំដើម"
+
+msgctxt "field:sale.configuration,sale_supply_production_default:"
+msgid "Sale Line Supply Production"
+msgstr "ផ្គត់ផ្គង់តាមផលិតកម្មសម្រាប់បន្ទាត់ការលក់"
+
+msgctxt "field:sale.configuration.default_work_center,company:"
+msgid "Company"
+msgstr "ក្រុមហ៊ុន"
+
+msgctxt "field:sale.configuration.default_work_center,default_work_center:"
+msgid "Default Work Center"
+msgstr "មជ្ឈមណ្ឌលការងារលំនាំដើម"
+
+msgctxt "field:sale.line,productions:"
+msgid "Productions"
+msgstr "បញ្ជាផលិតកម្ម"
+
+msgctxt "field:sale.line,supply_production:"
+msgid "Supply Production"
+msgstr "ផ្គត់ផ្គង់តាមផលិតកម្ម"
+
+msgctxt "field:sale.sale,productions:"
+msgid "Productions"
+msgstr "បញ្ជាផលិតកម្ម"
+
+msgctxt "help:sale.configuration,default_work_center:"
+msgid "Default Work Center for the Productions created from Sales"
+msgstr "មជ្ឈមណ្ឌលការងារលំនាំដើមសម្រាប់ផលិតកម្មដែលបង្កើតពីការលក់"
+
+msgctxt "help:sale.configuration,sale_supply_production_default:"
+msgid "Default Supply Production value for Sale Lines"
+msgstr "តម្លៃលំនាំដើមសម្រាប់ផ្គត់ផ្គង់តាមផលិតកម្មក្នុងបន្ទាត់ការលក់"
+
+msgctxt "help:sale.configuration.default_work_center,default_work_center:"
+msgid "Default Work Center for the Productions created from Sales"
+msgstr "មជ្ឈមណ្ឌលការងារលំនាំដើមសម្រាប់ផលិតកម្មដែលបង្កើតពីការលក់"
+
+msgctxt "model:ir.action,name:act_production_form"
+msgid "Productions"
+msgstr "បញ្ជាផលិតកម្ម"
+
+msgctxt "model:ir.action,name:wizard_production_change_quantity"
+msgid "Change Sale Quantity"
+msgstr "ប្ដូរបរិមាណលក់"
+
+#, python-format
+msgctxt "model:ir.message,text:invalid_production_state"
+msgid ""
+"You cannot modify the quantity of Production \"%(production)s\" because it is"
+" not in state \"Draft\" or \"Waiting\"."
+msgstr ""
+"មិនអាចកែប្រែបរិមាណផលិតកម្ម «%(production)s» បានទេ "
+"ព្រោះវាមិនស្ថិតក្នុងស្ថានភាព «សេចក្តីព្រាង» ឬ «កំពុងរង់ចាំ»។"
+
+msgctxt "model:ir.message,text:no_updateable_productions"
+msgid "There is no updateable production available!"
+msgstr "គ្មានផលិតកម្មដែលអាចធ្វើបច្ចុប្បន្នភាព!"
+
+#, python-format
+msgctxt "model:ir.message,text:production_no_related_to_sale"
+msgid ""
+"The Production \"%(production)s\" is not related to any sale.\n"
+"In this case, you can't use this wizard but you can modify the quantity directly in production's form."
+msgstr ""
+"ផលិតកម្ម «%(production)s» មិនពាក់ព័ន្ធនឹងការលក់ណាមួយទេ។\n"
+"ក្នុងករណីនេះ អ្នកមិនអាចប្រើជំនួយការនេះបានទេ ប៉ុន្តែអាចកែប្រែបរិមាណដោយផ្ទាល់ក្នុងទម្រង់ផលិតកម្ម។"
+
+#, python-format
+msgctxt "model:ir.message,text:production_with_same_origin"
+msgid ""
+"Cannot change Sale Line quantity because there ara more than one production "
+"\"%(productions)s\" with same Sale line \"%(sale_line)s\""
+msgstr ""
+"មិនអាចប្ដូរបរិមាណក្នុងបន្ទាត់ការលក់បានទេ ព្រោះមានផលិតកម្មលើសពីមួយ "
+"«%(productions)s» សម្រាប់បន្ទាត់ការលក់ដូចគ្នា «%(sale_line)s»។"
+
+msgctxt "model:ir.message,text:quantity_already_produced"
+msgid "Quantity already produced!"
+msgstr "បរិមាណនេះត្រូវបានផលិតរួចហើយ!"
+
+msgctxt "model:production.change_quantity.start,string:"
+msgid "Production Change Quantity Start"
+msgstr "ចាប់ផ្ដើមប្ដូរបរិមាណផលិតកម្ម"
+
+msgctxt "model:sale.configuration.default_work_center,string:"
+msgid "Sale Configuration Default Work Center"
+msgstr "មជ្ឈមណ្ឌលការងារលំនាំដើមក្នុងការកំណត់ការលក់"
+
+msgctxt "view:production.change_quantity.start:"
+msgid ""
+"It will change the quantity of the origin sale line which has been confirmed "
+"by the customer. The original one will be mantained in the Confirmed Quantity"
+" field."
+msgstr ""
+"ប្រព័ន្ធនឹងប្ដូរបរិមាណនៃបន្ទាត់ការលក់ដើមដែលអតិថិជនបានបញ្ជាក់។ "
+"បរិមាណដើមនឹងរក្សាទុកក្នុងវាល «បរិមាណដែលបានបញ្ជាក់»។"
+
+msgctxt "view:sale.sale:"
+msgid "Productions"
+msgstr "បញ្ជាផលិតកម្ម"
+
+msgctxt "model:production.change_quantity.start,name:"
+msgid "Change Production Quantity - Start"
+msgstr "ចាប់ផ្ដើមប្ដូរបរិមាណផលិតកម្ម"
